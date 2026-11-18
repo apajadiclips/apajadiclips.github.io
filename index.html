@@ -74,7 +74,7 @@ body{
   transition:background-color .6s ease, color .6s ease;
 }
 .wrap{position:relative;z-index:1;max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
-.wrap > .controls{margin-bottom:-14px}
+.wrap > .topbar{margin-bottom:-14px}
 
 /* ---------- Stage ---------- */
 .stage{
@@ -136,7 +136,17 @@ h1 .ch.nudge{animation:nudge .5s cubic-bezier(.2,.8,.3,1)}
 .mascot:nth-of-type(3) .lid{animation-delay:-3.7s}
 @keyframes blink{0%,93%,100%{transform:scaleY(1)}95.5%{transform:scaleY(.15)}}
 
-.controls{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.clock{display:flex;flex-direction:column;gap:2px;min-width:0;padding-top:2px}
+.ck-row{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:baseline;gap:6px;white-space:nowrap}
+.ck-row small{font:700 10px/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ck-row b{font:800 14px/1.25 var(--display);color:var(--ink);overflow:hidden;text-overflow:ellipsis}
+.ck-time{font-variant-numeric:tabular-nums;color:var(--c-teal)!important}
+.controls{display:grid;grid-template-columns:auto auto;justify-content:end;justify-items:stretch;gap:6px;flex:none}
+.controls .pill{justify-content:center;padding:7px 10px;font-size:12px;gap:5px}
+.controls .pill svg{width:15px;height:15px}
+.controls .lang-pill{min-width:0}
+@media (max-width:360px){ .ck-row{grid-template-columns:minmax(0,1fr)} .ck-row small{display:none} }
 .pill{
   display:inline-flex;align-items:center;gap:7px;
   font:700 13px/1 var(--body);color:var(--ink);
@@ -388,14 +398,20 @@ html.calm .pattern{animation-play-state:paused!important}
 </div>
 <canvas class="fx" id="fx" aria-hidden="true"></canvas>
 <div class="wrap">
+  <div class="topbar">
+  <div class="clock" id="clock">
+    <span class="ck-row"><small data-t="ckDay">Hari</small><b id="ck-day">Rabu</b></span>
+    <span class="ck-row"><small data-t="ckTime">Masa</small><b id="ck-time" class="ck-time">00:00:00</b></span>
+    <span class="ck-row"><small data-t="ckDate">Tarikh</small><b id="ck-date">18 November 2026</b></span>
+  </div>
   <div class="controls">
     <button class="pill" id="motion" type="button" aria-pressed="true">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path class="on" d="M7 5.5v13l11-6.5z"/><path class="off" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
-      <span class="on" data-t="motionOn">Gerak: Buka</span><span class="off" data-t="motionOff">Gerak: Tutup</span>
+      <span class="on" data-t="motionOn">Gerak</span><span class="off" data-t="motionOff">Gerak</span>
     </button>
     <button class="pill" id="sound" type="button" aria-pressed="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path class="on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
-      <span class="off" data-t="soundOff">Bunyi: Tutup</span><span class="on" data-t="soundOn">Bunyi: Buka</span>
+      <span class="off" data-t="soundOff">Bunyi</span><span class="on" data-t="soundOn">Bunyi</span>
     </button>
     <button class="pill lang-pill" id="lang" type="button" aria-label="Tukar bahasa">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.6 5.2 3.6 8.5s-1 6.1-3.6 8.5M12 3.5C9.4 5.9 8.4 8.7 8.4 12s1 6.1 3.6 8.5"/></svg>
@@ -405,6 +421,7 @@ html.calm .pattern{animation-play-state:paused!important}
       <svg class="moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
       <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
     </button>
+  </div>
   </div>
   <div class="inapp" id="inapp" hidden>
     <p class="inapp-t"><b id="inapp-title">Anda buka dari dalam TikTok.</b> <span data-t="inappBody">Untuk paparan terbaik, buka dalam browser telefon.</span></p>
@@ -1058,17 +1075,17 @@ html.calm .pattern{animation-play-state:paused!important}
 
   // ---- language: BM / EN / ID ----
   const T = {
-    bm: { html: "ms", code: "BM", motionOn: "Gerak: Buka", motionOff: "Gerak: Tutup", soundOn: "Bunyi: Buka", soundOff: "Bunyi: Tutup",
+    bm: { html: "ms", code: "BM", motionOn: "Gerak", motionOff: "Gerak", soundOn: "Bunyi", soundOff: "Bunyi", ckDay: "Hari", ckTime: "Masa", ckDate: "Tarikh",
           social: "Media sosial", tabLinks: "Pautan", tabGame: "Game", footerLinks: "Tekan Game untuk main pijak logo dan masuk ranking.", footer: "Tekan logo untuk pijak dan naik ranking.", logo: "Tekan logo supaya dia buat flip",
           lang: "Tukar bahasa (sekarang Bahasa Melayu)", forme: "Saluran dalam bahasa anda",
           steps: "pijakan anda", rkTitle: "Ranking pijakan", rkSub: "Tekan logo untuk pijak. 10 teratas masuk carta.", rkDname: "Nama", rkName: "Username", rkAppL: "Aplikasi", rkStepL: "Pijakan", rkLock: "Username dan aplikasi dikunci selepas masuk. Ingat PIN anda untuk masuk dari browser lain, contohnya dalam TikTok atau Google.", rkPin: "PIN (0001–9999)", rkLogin: "Masuk", rkSetPin: "Tetapkan PIN", rkPinSaved: "PIN disimpan ✓ Guna username dan PIN ini di browser lain.", rkBadPin: "PIN mesti 4 nombor, dari 0001 hingga 9999.", rkPinTaken: "PIN ini dah diambil orang lain. Pilih PIN lain.", rkWrongPin: "Username atau PIN salah.", rkLocked: "Dah 10 kali PIN salah. Tunggu 5 minit sebelum cuba lagi.", rkNoPin: "Akaun ini belum ada PIN. Tetapkan PIN dari browser asal dulu.", inappFrom: "Anda buka dari dalam {app}.", inappAnApp: "aplikasi", inappBody: "Untuk paparan terbaik, buka dalam browser telefon. Atau teruskan di sini dan masuk ranking dengan PIN.", inappChrome: "Buka dalam Chrome", inappSafari: "Buka dalam Safari", inappBrowser: "Buka dalam browser", inappLater: "Teruskan di sini", inappHowAndroid: "Kalau butang tak jalan: tekan ⋮ di atas, kemudian Buka dalam browser.", inappHowIos: "Kalau butang tak jalan: tekan ••• atau ikon kongsi, kemudian Buka dalam Safari / Buka dalam browser.", rkModeNew: "Akaun baru", rkModeHave: "Dah ada akaun (PIN)", rkLoginHelp: "Masuk ke akaun yang anda buat di browser atau telefon lain.", laughT: "TAKKAN DAH LUPA PIN KOT.....HAHAHAHA", laughS: "Tekan mana-mana untuk cuba lagi", rkNameWait: "Nama cuma boleh ditukar sebulan sekali. Boleh tukar lagi pada {when}.", rkPinWait: "PIN cuma boleh ditukar sehari sekali. Boleh tukar lagi pada {when}.", cdD: "Hari", cdH: "Jam", cdM: "Minit", cdS: "Saat", cdC: "Detik", rkRename: "Tukar nama", rkCancel: "Batal", rkKeyBtn: "Guna di browser lain", rkKeyHelp: "Salin link ini dan buka dalam browser lain, contohnya dalam TikTok atau Google, untuk guna akaun ranking yang sama. Jangan kongsi dengan orang lain.", rkKeyCopy: "Salin link akaun", rkKeyCopied: "Link disalin ✓", rkHave: "Dah ada akaun? Masuk dengan PIN", rkPaste: "Tampal link akaun", rkUse: "Guna", rkBadCode: "Link akaun tak sah. Salin semula dari browser asal.", rkTaken: "Username ini dah didaftar untuk aplikasi itu. Cuba username lain.", rkErr: "Tak dapat simpan sekarang. Cuba lagi sebentar.", rkApp: "Aplikasi", rkJoin: "Masuk ranking", rkSave: "Simpan", rkYou: "anda", rkUnit: "pijakan", rkEmpty: "Belum ada sesiapa dalam ranking. Jadi yang pertama!", rkLoading: "Memuatkan ranking…", rkSlow: "Ranking belum dapat dimuatkan. Cuba sebentar lagi.", rkOff: "Ranking akan dibuka tak lama lagi. Teruskan pijak!", rkSignin: "Log masuk ke Claude untuk masuk ranking.", rkNoWrite: "Anda boleh lihat ranking, tapi tak boleh masuk dari akaun ini.", rkRank: "Kedudukan anda", rkOut: "Belum masuk 10 teratas. Pijak lagi!",
           copy: "Salin link", copied: "Link disalin ✓", copyFail: "Tekan lama alamat untuk salin", secret: "Jumpa rahsia!", night: "Mod malam" },
-    en: { html: "en", code: "EN", motionOn: "Motion: On", motionOff: "Motion: Off", soundOn: "Sound: On", soundOff: "Sound: Off",
+    en: { html: "en", code: "EN", motionOn: "Motion", motionOff: "Motion", soundOn: "Sound", soundOff: "Sound", ckDay: "Day", ckTime: "Time", ckDate: "Date",
           social: "Social media", tabLinks: "Links", tabGame: "Game", footerLinks: "Tap Game to play the logo stomp and join the ranking.", footer: "Tap the logo to stomp and climb the ranking.", logo: "Tap the logo to make it flip",
           lang: "Change language (now English)", forme: "Channel in your language",
           steps: "your stomps", rkTitle: "Stomp ranking", rkSub: "Tap the logo to stomp. The top 10 make the chart.", rkDname: "Name", rkName: "Username", rkAppL: "App", rkStepL: "Stomps", rkLock: "Username and app are locked once you join. Remember your PIN to sign in from another browser, such as inside TikTok or Google.", rkPin: "PIN (0001–9999)", rkLogin: "Sign in", rkSetPin: "Set PIN", rkPinSaved: "PIN saved ✓ Use this username and PIN in other browsers.", rkBadPin: "The PIN must be 4 digits, from 0001 to 9999.", rkPinTaken: "Someone already has this PIN. Pick another one.", rkWrongPin: "Wrong username or PIN.", rkLocked: "10 wrong PINs. Wait 5 minutes before trying again.", rkNoPin: "This account has no PIN yet. Set one from the first browser.", inappFrom: "You opened this inside {app}.", inappAnApp: "an app", inappBody: "For the best view, open it in your phone's browser. Or stay here and sign in to the ranking with your PIN.", inappChrome: "Open in Chrome", inappSafari: "Open in Safari", inappBrowser: "Open in browser", inappLater: "Stay here", inappHowAndroid: "If the button does nothing: tap ⋮ at the top, then Open in browser.", inappHowIos: "If the button does nothing: tap ••• or the share icon, then Open in Safari / Open in browser.", rkModeNew: "New account", rkModeHave: "I have an account (PIN)", rkLoginHelp: "Sign in to the account you made in another browser or phone.", laughT: "FORGOT YOUR PIN ALREADY?.....HAHAHAHA", laughS: "Tap anywhere to try again", rkNameWait: "Your name can change once a month. You can change it again on {when}.", rkPinWait: "Your PIN can change once a day. You can change it again on {when}.", cdD: "Days", cdH: "Hours", cdM: "Min", cdS: "Sec", cdC: "1/100", rkRename: "Change name", rkCancel: "Cancel", rkKeyBtn: "Use in another browser", rkKeyHelp: "Copy this link and open it in another browser, such as inside TikTok or Google, to use the same ranking account. Don\'t share it with anyone.", rkKeyCopy: "Copy account link", rkKeyCopied: "Link copied ✓", rkHave: "Have an account? Sign in with your PIN", rkPaste: "Paste account link", rkUse: "Use", rkBadCode: "That account link isn\'t valid. Copy it again from the first browser.", rkTaken: "That username is already taken for this app. Try another.", rkErr: "Couldn't save right now. Try again shortly.", rkApp: "App", rkJoin: "Join the ranking", rkSave: "Save", rkYou: "you", rkUnit: "stomps", rkEmpty: "Nobody on the ranking yet. Be the first!", rkLoading: "Loading the ranking…", rkSlow: "The ranking can't be loaded yet. Try again shortly.", rkOff: "The ranking opens soon. Keep stomping!", rkSignin: "Sign in to Claude to join the ranking.", rkNoWrite: "You can see the ranking, but this account can't join it.", rkRank: "Your place", rkOut: "Not in the top 10 yet. Keep stomping!",
           copy: "Copy link", copied: "Link copied ✓", copyFail: "Long-press the address to copy", secret: "Secret found!", night: "Night mode" },
-    id: { html: "id", code: "ID", motionOn: "Gerak: Nyala", motionOff: "Gerak: Mati", soundOn: "Suara: Nyala", soundOff: "Suara: Mati",
+    id: { html: "id", code: "ID", motionOn: "Gerak", motionOff: "Gerak", soundOn: "Suara", soundOff: "Suara", ckDay: "Hari", ckTime: "Waktu", ckDate: "Tanggal",
           social: "Media sosial", tabLinks: "Tautan", tabGame: "Game", footerLinks: "Ketuk Game buat main injak logo dan ikut peringkat.", footer: "Ketuk logo buat injak dan naik peringkat.", logo: "Ketuk logo supaya dia salto",
           lang: "Ganti bahasa (sekarang Bahasa Indonesia)", forme: "Kanal dalam bahasamu",
           steps: "injakan kamu", rkTitle: "Peringkat injakan", rkSub: "Ketuk logo buat injak. 10 teratas masuk tabel.", rkDname: "Nama", rkName: "Username", rkAppL: "Aplikasi", rkStepL: "Injakan", rkLock: "Username dan aplikasi dikunci setelah masuk. Ingat PIN kamu untuk masuk dari browser lain, misalnya di dalam TikTok atau Google.", rkPin: "PIN (0001–9999)", rkLogin: "Masuk", rkSetPin: "Atur PIN", rkPinSaved: "PIN disimpan ✓ Pakai username dan PIN ini di browser lain.", rkBadPin: "PIN harus 4 angka, dari 0001 sampai 9999.", rkPinTaken: "PIN ini sudah dipakai orang lain. Pilih PIN lain.", rkWrongPin: "Username atau PIN salah.", rkLocked: "Sudah 10 kali PIN salah. Tunggu 5 menit sebelum coba lagi.", rkNoPin: "Akun ini belum punya PIN. Atur PIN dari browser pertama dulu.", inappFrom: "Kamu membuka ini di dalam {app}.", inappAnApp: "aplikasi", inappBody: "Biar tampilannya terbaik, buka di browser HP. Atau tetap di sini dan masuk peringkat pakai PIN.", inappChrome: "Buka di Chrome", inappSafari: "Buka di Safari", inappBrowser: "Buka di browser", inappLater: "Tetap di sini", inappHowAndroid: "Kalau tombolnya tidak jalan: ketuk ⋮ di atas, lalu Buka di browser.", inappHowIos: "Kalau tombolnya tidak jalan: ketuk ••• atau ikon bagikan, lalu Buka di Safari / Buka di browser.", rkModeNew: "Akun baru", rkModeHave: "Sudah punya akun (PIN)", rkLoginHelp: "Masuk ke akun yang kamu buat di browser atau HP lain.", laughT: "MASA SIH UDAH LUPA PIN.....HAHAHAHA", laughS: "Ketuk di mana saja untuk coba lagi", rkNameWait: "Nama hanya bisa diubah sebulan sekali. Bisa diubah lagi pada {when}.", rkPinWait: "PIN hanya bisa diubah sehari sekali. Bisa diubah lagi pada {when}.", cdD: "Hari", cdH: "Jam", cdM: "Menit", cdS: "Detik", cdC: "1/100", rkRename: "Ubah nama", rkCancel: "Batal", rkKeyBtn: "Pakai di browser lain", rkKeyHelp: "Salin tautan ini dan buka di browser lain, misalnya di dalam TikTok atau Google, untuk memakai akun peringkat yang sama. Jangan bagikan ke orang lain.", rkKeyCopy: "Salin tautan akun", rkKeyCopied: "Tautan disalin ✓", rkHave: "Sudah punya akun? Masuk dengan PIN", rkPaste: "Tempel tautan akun", rkUse: "Pakai", rkBadCode: "Tautan akun tidak valid. Salin lagi dari browser pertama.", rkTaken: "Username ini sudah dipakai untuk aplikasi itu. Coba username lain.", rkErr: "Belum bisa disimpan. Coba lagi sebentar.", rkApp: "Aplikasi", rkJoin: "Ikut peringkat", rkSave: "Simpan", rkYou: "kamu", rkUnit: "injakan", rkEmpty: "Belum ada yang masuk peringkat. Jadilah yang pertama!", rkLoading: "Memuat peringkat…", rkSlow: "Peringkat belum bisa dimuat. Coba lagi sebentar.", rkOff: "Peringkat segera dibuka. Terus injak!", rkSignin: "Masuk ke Claude untuk ikut peringkat.", rkNoWrite: "Kamu bisa lihat peringkat, tapi akun ini tidak bisa ikut.", rkRank: "Posisimu", rkOut: "Belum masuk 10 besar. Injak lagi!",
@@ -1515,6 +1532,19 @@ html.calm .pattern{animation-play-state:paused!important}
     window.__ajcInapp = label;
     box.hidden = false;
     document.getElementById("inapp-x").addEventListener("click", () => { box.hidden = true; try { sessionStorage.setItem("ajc-inapp", "0"); } catch (e) {} });
+  })();
+
+  // ---- clock in the top-left corner: day, time (with seconds) and date ----
+  (() => {
+    const dEl = document.getElementById("ck-day"), tEl = document.getElementById("ck-time"), aEl = document.getElementById("ck-date");
+    const tick = () => {
+      const now = new Date(), lang = document.documentElement.lang || "ms";
+      dEl.textContent = now.toLocaleDateString(lang, { weekday: "long" });
+      tEl.textContent = now.toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      aEl.textContent = now.toLocaleDateString(lang, { day: "numeric", month: innerWidth <= 360 ? "short" : "long", year: "numeric" });
+    };
+    tick();
+    setTimeout(() => { tick(); setInterval(tick, 1000); }, 1000 - (Date.now() % 1000));
   })();
 
   // ---- two pages on one link: #pautan (links) and #game ----
