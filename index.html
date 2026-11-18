@@ -25,6 +25,8 @@
 
 *{box-sizing:border-box}
 html,body{min-height:100%}
+html{overflow-x:hidden}
+.stage{overflow-x:clip} /* the logo jumping off-stage must never widen the page */
 body{
   background:var(--bg);
   color:var(--ink);
@@ -729,8 +731,6 @@ footer b{font-family:var(--display);color:var(--ink)}
     ytLinks.forEach(a => { a.classList.toggle("mine", a === mine); a.querySelector(".forme")?.remove(); });
     if (mine) {
       ytGroup.insertBefore(mine, ytGroup.querySelector("a[data-lang]"));
-      const tag = document.createElement("span"); tag.className = "forme"; tag.textContent = t.forme;
-      mine.querySelector(".txt").appendChild(tag);
     }
     langBtn.dataset.code = code;
     if (save) { try { localStorage.setItem("ajc-lang", code); } catch (e) {} }
