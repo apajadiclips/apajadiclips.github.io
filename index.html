@@ -265,6 +265,9 @@ html.calm .pattern{animation-play-state:paused!important}
 .tab[aria-current="page"]{background:var(--ink);color:var(--bg)}
 .tab:focus-visible{outline:3px solid var(--c-teal);outline-offset:2px}
 :root:not([data-route="game"]) [data-page="game"],:root[data-route="game"] [data-page="pautan"]{display:none!important}
+.count{position:relative}
+.bonus{position:absolute;left:50%;top:-6px;transform:translateX(-50%);font:800 22px/1 var(--display);color:var(--c-teal);pointer-events:none;animation:bonus 1.6s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes bonus{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}20%{opacity:1;transform:translate(-50%,-14px) scale(1.15)}100%{opacity:0;transform:translate(-50%,-46px) scale(1)}}
 /* ranking */
 .rk-mode{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--bg);border-radius:12px}
 .rk-mode button{font:800 13.5px/1.2 var(--display);color:var(--muted);background:none;border:0;border-radius:9px;padding:10px 6px;cursor:pointer}
@@ -859,7 +862,7 @@ html.calm .pattern{animation-play-state:paused!important}
     chars.forEach(c => { c.style.color = ""; c.classList.remove("stomp", "nudge"); });
     m.rot = 0; m.sx = m.sy = 1; m.body.style.transformOrigin = "";
     if (el.style.opacity === "0") await dropIn(MID);
-    else await hop(MID, { h: H * .7 });
+    else if (!(isGame() && m.idx === MID)) await hop(MID, { h: H * .7 });
     await wait(200); look(-1); await wait(260); look(1); await wait(260); look(0); await wait(160);
     // charge up: swell, tremble, flash through the three colours
     sfx.charge(1.25);
@@ -874,6 +877,7 @@ html.calm .pattern{animation-play-state:paused!important}
     const r = el.getBoundingClientRect();
     burst(r.left + r.width / 2, r.top + r.height * .6);
     sfx.boom();
+    if (isGame()) addBonus(100); // the explosion is worth 100 stomps in the game
     el.style.transition = "none"; el.style.opacity = 0; void el.offsetWidth; el.style.transition = "opacity .25s ease";
     m.sx = m.sy = 1; render();
     restart(boomtxt, "go"); restart(title, "shake");
@@ -882,7 +886,7 @@ html.calm .pattern{animation-play-state:paused!important}
     await wait(1800);
     await dropIn(MID); // ...and it's back, a bit dazed
     await wait(300); look(-1); await wait(380); look(1); await wait(380); look(0); await wait(400);
-    await leave(1);
+    if (!isGame()) await leave(1); // in the game it stays put, ready to be tapped
   }
   let seen = 0;
   const boomTimer = setInterval(() => {
@@ -923,6 +927,19 @@ html.calm .pattern{animation-play-state:paused!important}
     el.style.opacity = 1;
   }
 
+  // game page: the logo stands still in the middle so it is easy to tap
+  const isGame = () => document.documentElement.dataset.route === "game";
+  function park() {
+    if (!spots.length) return;
+    const s0 = spots[MID];
+    if (el.style.opacity === "0" || m.idx !== MID || Math.abs(m.x - s0.x) > .5 || Math.abs(m.y - s0.y) > .5 || m.rot) {
+      chars.forEach(c => { c.style.color = ""; });
+      m.idx = MID; m.x = s0.x; m.y = s0.y; m.rot = 0; m.sx = m.sy = 1; m.body.style.transformOrigin = "";
+      el.style.opacity = 1; look(0); render();
+    }
+  }
+  // stop a running hop routine as soon as the game page opens (route() may not have run yet)
+  addEventListener("hashchange", () => { if (location.hash === "#game" && m.busy && !boomPending) interrupt = true; });
   async function show() {
     let k = 0;
     for (;;) {
@@ -945,6 +962,7 @@ html.calm .pattern{animation-play-state:paused!important}
         await sleep(500);
         continue;
       }
+      if (isGame()) { interrupt = false; park(); await sleep(250); continue; }
       m.busy = true;
       try { await ROUTINES[k % ROUTINES.length](k % 2 === 0); }
       catch (e) { if (e !== STOP) console.error(e); }
@@ -973,7 +991,7 @@ html.calm .pattern{animation-play-state:paused!important}
     if (tapTimes.length < 8) { tapTimes.push(now); addStep(); }
     m.sy = .78; m.sx = 1.18; render(); setTimeout(() => { m.sy = m.sx = 1; render(); }, 90);
     restart(m.rays, "pop"); sfx.stomp(m.idx, .7, m.color);
-    if (!motionOn) return;
+    if (!motionOn || isGame()) return;
     flipNext = true;
     taps = taps.filter(t => now - t < 2500); taps.push(now);
     if (!secretDone && taps.length >= 5) { taps = []; secretDone = true; secretPending = true; if (m.busy) interrupt = true; }
@@ -1047,6 +1065,13 @@ html.calm .pattern{animation-play-state:paused!important}
   try { steps = parseInt(localStorage.getItem("ajc-taps") || "0", 10) || 0; } catch (e) {}
   const fmt = n => n.toLocaleString(document.documentElement.lang || "ms");
   countEl.textContent = fmt(steps);
+  function addBonus(n) {
+    steps += n; countEl.textContent = fmt(steps); restart(countEl, "bump");
+    try { localStorage.setItem("ajc-taps", String(steps)); } catch (e) {}
+    const b = document.createElement("span"); b.className = "bonus"; b.textContent = "+" + n;
+    countEl.parentElement.appendChild(b); setTimeout(() => b.remove(), 1700);
+    rank.changed();
+  }
   function addStep() {
     if (document.documentElement.dataset.route !== "game") return;
     steps++; countEl.textContent = fmt(steps); restart(countEl, "bump");
@@ -1105,7 +1130,7 @@ html.calm .pattern{animation-play-state:paused!important}
           const j = await rpc("ranking_join", { p_name: name, p_username: user, p_app: app, p_pin: pin });
           creds = { id: j.id, token: j.token, name, user, app }; keep();
         },
-        async save(n) { if (!creds) return; await rpc("ranking_steps", { p_id: creds.id, p_token: creds.token, p_steps: n }); },
+        async save(n) { if (!creds) return; return await rpc("ranking_steps", { p_id: creds.id, p_token: creds.token, p_steps: n }); },
         async rename(name) { await rpc("ranking_rename", { p_id: creds.id, p_token: creds.token, p_name: name }); creds.name = name; keep(); },
         // the same account from any browser: username + app + PIN (each in-app browser keeps its own storage)
         async login(user, app, pin) {
@@ -1211,7 +1236,12 @@ html.calm .pattern{animation-play-state:paused!important}
       if (!be || !me) return;
       if (saving) { again = true; return; }
       saving = true;
-      try { do { again = false; await be.save(steps); } while (again); be.refresh(); }
+      try {
+        let got;
+        do { again = false; got = await be.save(steps); } while (again);
+        be.refresh();
+        if (typeof got === "number" && got < steps) { clearTimeout(saveT); saveT = setTimeout(save, 3000); }
+      }
       catch (e) {
         if (e.code === "not_allowed") {
           if (be.forget) {
