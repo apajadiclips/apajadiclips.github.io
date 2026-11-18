@@ -1160,7 +1160,7 @@ html.calm .pattern{animation-play-state:paused!important}
       let cb = null, timer = 0;
       async function pull() {
         try {
-          const r = await fetch(SUPA_URL + "/rest/v1/ranking?select=id,name,username,app,steps&order=steps.desc&limit=50", { headers: H });
+          const r = await fetch(SUPA_URL + "/rest/v1/ranking?select=id,name,app,steps&order=steps.desc&limit=50", { headers: H });
           if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(r.status + " " + (j.code || "") + " " + (j.message || "")); }
           cb && cb((await r.json()).map(norm), null);
         } catch (e) { cb && cb(null, e); }
@@ -1196,7 +1196,7 @@ html.calm .pattern{animation-play-state:paused!important}
           if (!m2) { const e = new Error("bad_code"); e.code = "bad_code"; throw e; }
           const [, id, token] = m2;
           await rpc("ranking_steps", { p_id: id, p_token: token, p_steps: 0 }); // proves the code without changing anything
-          const r = await fetch(SUPA_URL + "/rest/v1/ranking?select=id,name,username,app,steps&id=eq." + id, { headers: H });
+          const r = await fetch(SUPA_URL + "/rest/v1/ranking?select=id,name,app,steps&id=eq." + id, { headers: H });
           const row = (await r.json())[0];
           if (!row) { const e = new Error("bad_code"); e.code = "bad_code"; throw e; }
           const v = norm(row);
@@ -1253,7 +1253,8 @@ html.calm .pattern{animation-play-state:paused!important}
         };
         const nm = line(tt.rkDname, r.name + (r.id === uid ? " (" + tt.rkYou + ")" : ""), "rk-n");
         const ap = line(tt.rkAppL, r.app, "rk-ap"); ap.style.setProperty("--appc", appColor(r.app));
-        who.append(nm, line(tt.rkName, r.user || "–"), ap);
+        // usernames stay private: the chart shows only your own (kept on your phone)
+        if (r.id === uid && me && me.user) who.append(nm, line(tt.rkName, me.user), ap); else who.append(nm, ap);
         const sc = document.createElement("span"); sc.className = "rk-s";
         const u = document.createElement("small"); u.textContent = tt.rkStepL;
         const num = document.createElement("span"); num.textContent = fmt(r.steps);
