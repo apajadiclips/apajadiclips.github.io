@@ -1336,13 +1336,16 @@ html.calm .pattern{animation-play-state:paused!important}
     // wrong PIN twice or more: no lock, just a full-screen laugh
     let pinFails = 0, laughT = 0;
     const laughBox = $("laugh");
+    const laughSnd = new Audio("laugh.mp3"); laughSnd.preload = "auto"; laughSnd.volume = .9;
     function laugh() {
       const tt = t();
       $("laugh-t").textContent = tt.laughT; $("laugh-s").textContent = tt.laughS;
-      laughBox.hidden = false; sfx.laugh();
+      laughBox.hidden = false;
+      // the recorded laugh; the made-up HA HA HA only if the browser refuses to play it
+      try { laughSnd.currentTime = 0; const pr = laughSnd.play(); if (pr) pr.catch(() => sfx.laugh()); } catch (e) { sfx.laugh(); }
       clearTimeout(laughT); laughT = setTimeout(hideLaugh, 3500);
     }
-    function hideLaugh() { laughBox.hidden = true; clearTimeout(laughT); $("rk-l-pin").value = ""; $("rk-l-pin").focus(); }
+    function hideLaugh() { laughBox.hidden = true; clearTimeout(laughT); try { laughSnd.pause(); } catch (e) {} $("rk-l-pin").value = ""; $("rk-l-pin").focus(); }
     laughBox.addEventListener("click", hideLaugh);
     addEventListener("keydown", e => { if (!laughBox.hidden && (e.key === "Escape" || e.key === "Enter")) hideLaugh(); });
     $("rk-restore").addEventListener("submit", async e => {
