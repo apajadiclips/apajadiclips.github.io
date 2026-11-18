@@ -1,4 +1,4 @@
--- PIN unik untuk ranking ApaJadiClips (1000-9999, satu PIN satu orang)
+-- PIN unik untuk ranking ApaJadiClips (0001-9999, satu PIN satu orang)
 -- Boleh dijalankan walaupun versi PIN yang lebih awal dah dijalankan.
 create extension if not exists pgcrypto with schema extensions;
 
@@ -44,13 +44,13 @@ $$;
 revoke all on function public.ranking_token_ok(uuid, text) from public, anon, authenticated;
 drop function if exists public.ranking_pin_weak(text);
 
--- masuk ranking dengan PIN 1000-9999 yang belum diambil orang
+-- masuk ranking dengan PIN 0001-9999 yang belum diambil orang
 drop function if exists public.ranking_join(text, text, text);
 create or replace function public.ranking_join(p_name text, p_username text, p_app text, p_pin text)
 returns json language plpgsql security definer set search_path = public, extensions as $$
 declare v_id uuid; v_token text := gen_random_uuid()::text || gen_random_uuid()::text; v_c text;
 begin
-  if coalesce(p_pin, '') !~ '^[1-9][0-9]{3}$' then raise exception 'bad_pin'; end if;
+  if coalesce(p_pin, '') !~ '^[0-9]{4}$' or p_pin = '0000' then raise exception 'bad_pin'; end if;
   insert into ranking(name, username, app)
   values (trim(p_name), trim(regexp_replace(p_username, '^@+', '')), trim(p_app))
   returning id into v_id;
@@ -91,7 +91,7 @@ create or replace function public.ranking_set_pin(p_id uuid, p_token text, p_pin
 returns void language plpgsql security definer set search_path = public, extensions as $$
 begin
   if not ranking_token_ok(p_id, p_token) then raise exception 'not_allowed'; end if;
-  if coalesce(p_pin, '') !~ '^[1-9][0-9]{3}$' then raise exception 'bad_pin'; end if;
+  if coalesce(p_pin, '') !~ '^[0-9]{4}$' or p_pin = '0000' then raise exception 'bad_pin'; end if;
   update ranking_keys
      set pin_hash = crypt(p_pin, gen_salt('bf')), pin_lookup = ranking_pin_lookup(p_pin),
          pin_fails = 0, pin_locked_until = null
