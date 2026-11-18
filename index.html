@@ -277,6 +277,16 @@ html.calm .pattern{animation-play-state:paused!important}
 .rk-place{font-size:12.5px;color:var(--ink);font-weight:700}
 .rk-edit{font:700 13px var(--body);color:var(--c-teal);background:none;border:0;cursor:pointer;padding:4px;text-decoration:underline;white-space:nowrap}
 .rk-edit:focus-visible{outline:3px solid var(--c-teal);border-radius:6px}
+.rk-acts{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.rk-key{display:flex;flex-direction:column;gap:8px;background:var(--bg);border-radius:12px;padding:10px 12px}
+.rk-key p{margin:0;font-size:13px;color:var(--muted)}
+.rk-key-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rk-key .rk-join,.rk-restore .rk-join{padding:9px 14px;background:var(--c-teal);color:#fff}
+.rk-key input,.rk-restore input{min-width:0;font:600 13px var(--body);color:var(--ink);background:var(--card);border:2px solid var(--edge);border-radius:10px;padding:8px 10px}
+.rk-key input{width:100%}
+.rk-restore{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:-6px}
+.rk-restore-row{display:flex;gap:8px;width:100%}
+.rk-restore-row input{flex:1}
 .rk-rename{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .rk-rename input{flex:1 1 160px;min-width:0;font:600 15px var(--body);color:var(--ink);background:var(--bg);border:2px solid var(--edge);border-radius:12px;padding:10px 12px}
 .rk-rename input:focus-visible{outline:3px solid var(--c-teal);outline-offset:1px}
@@ -387,9 +397,21 @@ html.calm .pattern{animation-play-state:paused!important}
         <button class="pill rk-join" id="rk-join" type="submit"><span data-t="rkJoin">Masuk ranking</span></button>
       </form>
       <p class="rk-lock" id="rk-lock" data-t="rkLock">Username dan aplikasi dikunci selepas masuk. Cuma nama boleh ditukar.</p>
+      <form class="rk-restore" id="rk-restore" hidden>
+        <button class="rk-edit" id="rk-restore-open" type="button" data-t="rkHave">Dah masuk ranking di browser lain?</button>
+        <div class="rk-restore-row" id="rk-restore-row" hidden>
+          <input id="rk-restore-code" autocomplete="off" autocapitalize="none" spellcheck="false" data-tp="rkPaste" placeholder="Tampal link akaun">
+          <button class="pill rk-join" type="submit"><span data-t="rkUse">Guna</span></button>
+        </div>
+      </form>
       <div class="rk-me" id="rk-me" hidden>
         <span class="rk-me-txt"><b id="rk-me-name"></b><span class="rk-app" id="rk-me-sub"></span><span class="rk-place" id="rk-me-place"></span></span>
-        <button class="rk-edit" id="rk-rename-btn" type="button" data-t="rkRename">Tukar nama</button>
+        <span class="rk-acts"><button class="rk-edit" id="rk-rename-btn" type="button" data-t="rkRename">Tukar nama</button><button class="rk-edit" id="rk-key-btn" type="button" data-t="rkKeyBtn" hidden>Guna di browser lain</button></span>
+      </div>
+      <div class="rk-key" id="rk-key" hidden>
+        <p data-t="rkKeyHelp">Salin link ini dan buka dalam browser lain, contohnya dalam TikTok atau Google, untuk guna akaun ranking yang sama. Jangan kongsi dengan orang lain.</p>
+        <div class="rk-key-row"><button class="pill rk-join" id="rk-key-copy" type="button"><span id="rk-key-copy-l" data-t="rkKeyCopy">Salin link akaun</span></button><button class="rk-edit" id="rk-key-close" type="button" data-t="rkCancel">Batal</button></div>
+        <input id="rk-key-text" readonly aria-label="Link akaun">
       </div>
       <form class="rk-rename" id="rk-rename" hidden>
         <input id="rk-newname" maxlength="20" autocomplete="nickname" data-tp="rkDname" placeholder="Nama" required>
@@ -943,17 +965,17 @@ html.calm .pattern{animation-play-state:paused!important}
     bm: { html: "ms", code: "BM", motionOn: "Gerak: Buka", motionOff: "Gerak: Tutup", soundOn: "Bunyi: Buka", soundOff: "Bunyi: Tutup",
           social: "Media sosial", tabLinks: "Pautan", tabGame: "Game", footerLinks: "Tekan Game untuk main pijak logo dan masuk ranking.", footer: "Tekan logo untuk pijak dan naik ranking.", logo: "Tekan logo supaya dia buat flip",
           lang: "Tukar bahasa (sekarang Bahasa Melayu)", forme: "Saluran dalam bahasa anda",
-          steps: "pijakan anda", rkTitle: "Ranking pijakan", rkSub: "Tekan logo untuk pijak. 10 teratas masuk carta.", rkDname: "Nama", rkName: "Username", rkAppL: "Aplikasi", rkStepL: "Pijakan", rkLock: "Username dan aplikasi dikunci selepas masuk. Cuma nama boleh ditukar.", rkRename: "Tukar nama", rkCancel: "Batal", rkTaken: "Username ini dah didaftar untuk aplikasi itu. Cuba username lain.", rkErr: "Tak dapat simpan sekarang. Cuba lagi sebentar.", rkApp: "Aplikasi", rkJoin: "Masuk ranking", rkSave: "Simpan", rkYou: "anda", rkUnit: "pijakan", rkEmpty: "Belum ada sesiapa dalam ranking. Jadi yang pertama!", rkLoading: "Memuatkan ranking…", rkSlow: "Ranking belum dapat dimuatkan. Cuba sebentar lagi.", rkOff: "Ranking akan dibuka tak lama lagi. Teruskan pijak!", rkSignin: "Log masuk ke Claude untuk masuk ranking.", rkNoWrite: "Anda boleh lihat ranking, tapi tak boleh masuk dari akaun ini.", rkRank: "Kedudukan anda", rkOut: "Belum masuk 10 teratas. Pijak lagi!",
+          steps: "pijakan anda", rkTitle: "Ranking pijakan", rkSub: "Tekan logo untuk pijak. 10 teratas masuk carta.", rkDname: "Nama", rkName: "Username", rkAppL: "Aplikasi", rkStepL: "Pijakan", rkLock: "Username dan aplikasi dikunci selepas masuk. Cuma nama boleh ditukar.", rkRename: "Tukar nama", rkCancel: "Batal", rkKeyBtn: "Guna di browser lain", rkKeyHelp: "Salin link ini dan buka dalam browser lain, contohnya dalam TikTok atau Google, untuk guna akaun ranking yang sama. Jangan kongsi dengan orang lain.", rkKeyCopy: "Salin link akaun", rkKeyCopied: "Link disalin ✓", rkHave: "Dah masuk ranking di browser lain?", rkPaste: "Tampal link akaun", rkUse: "Guna", rkBadCode: "Link akaun tak sah. Salin semula dari browser asal.", rkTaken: "Username ini dah didaftar untuk aplikasi itu. Cuba username lain.", rkErr: "Tak dapat simpan sekarang. Cuba lagi sebentar.", rkApp: "Aplikasi", rkJoin: "Masuk ranking", rkSave: "Simpan", rkYou: "anda", rkUnit: "pijakan", rkEmpty: "Belum ada sesiapa dalam ranking. Jadi yang pertama!", rkLoading: "Memuatkan ranking…", rkSlow: "Ranking belum dapat dimuatkan. Cuba sebentar lagi.", rkOff: "Ranking akan dibuka tak lama lagi. Teruskan pijak!", rkSignin: "Log masuk ke Claude untuk masuk ranking.", rkNoWrite: "Anda boleh lihat ranking, tapi tak boleh masuk dari akaun ini.", rkRank: "Kedudukan anda", rkOut: "Belum masuk 10 teratas. Pijak lagi!",
           copy: "Salin link", copied: "Link disalin ✓", copyFail: "Tekan lama alamat untuk salin", secret: "Jumpa rahsia!", night: "Mod malam" },
     en: { html: "en", code: "EN", motionOn: "Motion: On", motionOff: "Motion: Off", soundOn: "Sound: On", soundOff: "Sound: Off",
           social: "Social media", tabLinks: "Links", tabGame: "Game", footerLinks: "Tap Game to play the logo stomp and join the ranking.", footer: "Tap the logo to stomp and climb the ranking.", logo: "Tap the logo to make it flip",
           lang: "Change language (now English)", forme: "Channel in your language",
-          steps: "your stomps", rkTitle: "Stomp ranking", rkSub: "Tap the logo to stomp. The top 10 make the chart.", rkDname: "Name", rkName: "Username", rkAppL: "App", rkStepL: "Stomps", rkLock: "Username and app are locked once you join. Only your name can change.", rkRename: "Change name", rkCancel: "Cancel", rkTaken: "That username is already taken for this app. Try another.", rkErr: "Couldn't save right now. Try again shortly.", rkApp: "App", rkJoin: "Join the ranking", rkSave: "Save", rkYou: "you", rkUnit: "stomps", rkEmpty: "Nobody on the ranking yet. Be the first!", rkLoading: "Loading the ranking…", rkSlow: "The ranking can't be loaded yet. Try again shortly.", rkOff: "The ranking opens soon. Keep stomping!", rkSignin: "Sign in to Claude to join the ranking.", rkNoWrite: "You can see the ranking, but this account can't join it.", rkRank: "Your place", rkOut: "Not in the top 10 yet. Keep stomping!",
+          steps: "your stomps", rkTitle: "Stomp ranking", rkSub: "Tap the logo to stomp. The top 10 make the chart.", rkDname: "Name", rkName: "Username", rkAppL: "App", rkStepL: "Stomps", rkLock: "Username and app are locked once you join. Only your name can change.", rkRename: "Change name", rkCancel: "Cancel", rkKeyBtn: "Use in another browser", rkKeyHelp: "Copy this link and open it in another browser, such as inside TikTok or Google, to use the same ranking account. Don\'t share it with anyone.", rkKeyCopy: "Copy account link", rkKeyCopied: "Link copied ✓", rkHave: "Already joined in another browser?", rkPaste: "Paste account link", rkUse: "Use", rkBadCode: "That account link isn\'t valid. Copy it again from the first browser.", rkTaken: "That username is already taken for this app. Try another.", rkErr: "Couldn't save right now. Try again shortly.", rkApp: "App", rkJoin: "Join the ranking", rkSave: "Save", rkYou: "you", rkUnit: "stomps", rkEmpty: "Nobody on the ranking yet. Be the first!", rkLoading: "Loading the ranking…", rkSlow: "The ranking can't be loaded yet. Try again shortly.", rkOff: "The ranking opens soon. Keep stomping!", rkSignin: "Sign in to Claude to join the ranking.", rkNoWrite: "You can see the ranking, but this account can't join it.", rkRank: "Your place", rkOut: "Not in the top 10 yet. Keep stomping!",
           copy: "Copy link", copied: "Link copied ✓", copyFail: "Long-press the address to copy", secret: "Secret found!", night: "Night mode" },
     id: { html: "id", code: "ID", motionOn: "Gerak: Nyala", motionOff: "Gerak: Mati", soundOn: "Suara: Nyala", soundOff: "Suara: Mati",
           social: "Media sosial", tabLinks: "Tautan", tabGame: "Game", footerLinks: "Ketuk Game buat main injak logo dan ikut peringkat.", footer: "Ketuk logo buat injak dan naik peringkat.", logo: "Ketuk logo supaya dia salto",
           lang: "Ganti bahasa (sekarang Bahasa Indonesia)", forme: "Kanal dalam bahasamu",
-          steps: "injakan kamu", rkTitle: "Peringkat injakan", rkSub: "Ketuk logo buat injak. 10 teratas masuk tabel.", rkDname: "Nama", rkName: "Username", rkAppL: "Aplikasi", rkStepL: "Injakan", rkLock: "Username dan aplikasi dikunci setelah masuk. Hanya nama yang bisa diubah.", rkRename: "Ubah nama", rkCancel: "Batal", rkTaken: "Username ini sudah dipakai untuk aplikasi itu. Coba username lain.", rkErr: "Belum bisa disimpan. Coba lagi sebentar.", rkApp: "Aplikasi", rkJoin: "Ikut peringkat", rkSave: "Simpan", rkYou: "kamu", rkUnit: "injakan", rkEmpty: "Belum ada yang masuk peringkat. Jadilah yang pertama!", rkLoading: "Memuat peringkat…", rkSlow: "Peringkat belum bisa dimuat. Coba lagi sebentar.", rkOff: "Peringkat segera dibuka. Terus injak!", rkSignin: "Masuk ke Claude untuk ikut peringkat.", rkNoWrite: "Kamu bisa lihat peringkat, tapi akun ini tidak bisa ikut.", rkRank: "Posisimu", rkOut: "Belum masuk 10 besar. Injak lagi!",
+          steps: "injakan kamu", rkTitle: "Peringkat injakan", rkSub: "Ketuk logo buat injak. 10 teratas masuk tabel.", rkDname: "Nama", rkName: "Username", rkAppL: "Aplikasi", rkStepL: "Injakan", rkLock: "Username dan aplikasi dikunci setelah masuk. Hanya nama yang bisa diubah.", rkRename: "Ubah nama", rkCancel: "Batal", rkKeyBtn: "Pakai di browser lain", rkKeyHelp: "Salin tautan ini dan buka di browser lain, misalnya di dalam TikTok atau Google, untuk memakai akun peringkat yang sama. Jangan bagikan ke orang lain.", rkKeyCopy: "Salin tautan akun", rkKeyCopied: "Tautan disalin ✓", rkHave: "Sudah ikut peringkat di browser lain?", rkPaste: "Tempel tautan akun", rkUse: "Pakai", rkBadCode: "Tautan akun tidak valid. Salin lagi dari browser pertama.", rkTaken: "Username ini sudah dipakai untuk aplikasi itu. Coba username lain.", rkErr: "Belum bisa disimpan. Coba lagi sebentar.", rkApp: "Aplikasi", rkJoin: "Ikut peringkat", rkSave: "Simpan", rkYou: "kamu", rkUnit: "injakan", rkEmpty: "Belum ada yang masuk peringkat. Jadilah yang pertama!", rkLoading: "Memuat peringkat…", rkSlow: "Peringkat belum bisa dimuat. Coba lagi sebentar.", rkOff: "Peringkat segera dibuka. Terus injak!", rkSignin: "Masuk ke Claude untuk ikut peringkat.", rkNoWrite: "Kamu bisa lihat peringkat, tapi akun ini tidak bisa ikut.", rkRank: "Posisimu", rkOut: "Belum masuk 10 besar. Injak lagi!",
           copy: "Salin tautan", copied: "Tautan disalin ✓", copyFail: "Tekan lama alamatnya untuk menyalin", secret: "Rahasia ketemu!", night: "Mode malam" },
   };
   const ORDER = ["bm", "en", "id"];
@@ -1056,6 +1078,20 @@ html.calm .pattern{animation-play-state:paused!important}
         },
         async save(n) { if (!creds) return; await rpc("ranking_steps", { p_id: creds.id, p_token: creds.token, p_steps: n }); },
         async rename(name) { await rpc("ranking_rename", { p_id: creds.id, p_token: creds.token, p_name: name }); creds.name = name; keep(); },
+        // move the account to another browser (each app's in-app browser keeps its own storage)
+        code: () => creds && creds.id + "." + creds.token,
+        async restore(code) {
+          const m2 = String(code).trim().match(/([0-9a-f-]{36})\.([0-9a-f-]{40,})/i);
+          if (!m2) { const e = new Error("bad_code"); e.code = "bad_code"; throw e; }
+          const [, id, token] = m2;
+          await rpc("ranking_steps", { p_id: id, p_token: token, p_steps: 0 }); // proves the code without changing anything
+          const r = await fetch(SUPA_URL + "/rest/v1/ranking?select=id,name,username,app,steps&id=eq." + id, { headers: H });
+          const row = (await r.json())[0];
+          if (!row) { const e = new Error("bad_code"); e.code = "bad_code"; throw e; }
+          const v = norm(row);
+          creds = { id, token, name: v.name, user: v.user, app: v.app }; keep();
+          return v;
+        },
       };
     }
     // ---- backend 2: Claude's shared store (private Claude preview) ----
@@ -1123,6 +1159,9 @@ html.calm .pattern{animation-play-state:paused!important}
       meBox.hidden = !me || !renameForm.hidden;
       form.hidden = !!me || !be || !be.canJoin() || blocked;
       $("rk-lock").hidden = form.hidden;
+      $("rk-restore").hidden = form.hidden || !(be && be.restore);
+      $("rk-key-btn").hidden = !(be && be.code && me);
+      if (!me) $("rk-key").hidden = true;
     }
     async function save() {
       if (!be || !me) return;
@@ -1163,11 +1202,40 @@ html.calm .pattern{animation-play-state:paused!important}
       catch (err) { say("rkErr"); }
       render();
     });
+    const SITE_GAME = "https://apajadiclips.github.io/#k=";
+    $("rk-key-btn").addEventListener("click", () => {
+      const box = $("rk-key"); box.hidden = !box.hidden;
+      $("rk-key-text").value = SITE_GAME + be.code();
+    });
+    $("rk-key-close").addEventListener("click", () => { $("rk-key").hidden = true; });
+    $("rk-key-copy").addEventListener("click", () => {
+      const inp = $("rk-key-text"), lbl = $("rk-key-copy-l");
+      const done = ok => { lbl.textContent = ok ? t().rkKeyCopied : t().rkKeyCopy; if (!ok) { inp.focus(); inp.select(); } setTimeout(() => { lbl.textContent = t().rkKeyCopy; }, 2200); };
+      try { navigator.clipboard.writeText(inp.value).then(() => done(true), () => done(false)); } catch (e) { done(false); }
+    });
+    $("rk-restore-open").addEventListener("click", () => { $("rk-restore-row").hidden = false; $("rk-restore-code").focus(); });
+    async function useCode(code) {
+      try {
+        const v = await be.restore(code);
+        me = { name: v.name, user: v.user, app: v.app };
+        if (v.steps > steps) { steps = v.steps; countEl.textContent = fmt(steps); try { localStorage.setItem("ajc-taps", String(steps)); } catch (e) {} }
+        say(""); be.refresh();
+      } catch (err) { say("rkBadCode"); }
+      render();
+    }
+    $("rk-restore").addEventListener("submit", e => { e.preventDefault(); useCode($("rk-restore-code").value); });
     async function start() {
       const c = window.claude && window.claude.use ? window.claude : null;
       be = c ? await claudeStore(c) : supabase();
       if (!be) { state = "off"; say("rkOff"); return render(); }
       me = be.mine();
+      // opened from an account link: take the account over, then show the game
+      const hk = location.hash.match(/^#k=(.+)$/);
+      if (hk && be.restore) {
+        try { history.replaceState(null, "", location.pathname + location.search + "#game"); } catch (e) {}
+        dispatchEvent(new HashChangeEvent("hashchange"));
+        useCode(decodeURIComponent(hk[1]));
+      }
       const slow = setTimeout(() => { if (state === "loading") say("rkSlow"); }, 10000);
       be.subscribe((rs, err, cached) => {
         if (err) { clearTimeout(slow); if (state === "loading") { state = "error"; say("rkSlow"); note.textContent += " [" + String(err.message || err).slice(0, 120) + "]"; } return render(); }
