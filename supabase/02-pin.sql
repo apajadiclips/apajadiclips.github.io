@@ -1,4 +1,5 @@
--- PIN untuk ranking ApaJadiClips: masuk ke akaun yang sama dari browser lain
+-- PIN unik untuk ranking ApaJadiClips (1000-9999, satu PIN satu orang)
+-- Boleh dijalankan walaupun versi PIN yang lebih awal dah dijalankan.
 create extension if not exists pgcrypto with schema extensions;
 
 -- satu akaun boleh ada beberapa browser (setiap satu dapat kunci sendiri)
@@ -15,8 +16,25 @@ insert into public.ranking_tokens (id, token_hash)
 
 alter table public.ranking_keys
   add column if not exists pin_hash text,
+  add column if not exists pin_lookup bytea,
   add column if not exists pin_fails integer not null default 0,
   add column if not exists pin_locked_until timestamptz;
+create unique index if not exists ranking_keys_pin_lookup on public.ranking_keys (pin_lookup);
+
+-- kunci rahsia untuk semak PIN unik tanpa simpan PIN asal
+create table if not exists public.ranking_secret (
+  id integer primary key default 1 check (id = 1),
+  k bytea not null
+);
+alter table public.ranking_secret enable row level security;
+revoke all on public.ranking_secret from anon, authenticated;
+insert into public.ranking_secret (k) values (extensions.gen_random_bytes(32)) on conflict do nothing;
+
+create or replace function public.ranking_pin_lookup(p text)
+returns bytea language sql stable security definer set search_path = public, extensions as $$
+  select hmac(convert_to(p, 'UTF8'), k, 'sha256') from ranking_secret where id = 1;
+$$;
+revoke all on function public.ranking_pin_lookup(text) from public, anon, authenticated;
 
 create or replace function public.ranking_token_ok(p_id uuid, p_token text)
 returns boolean language sql stable security definer set search_path = public as $$
@@ -24,22 +42,25 @@ returns boolean language sql stable security definer set search_path = public as
     where t.id = p_id and t.token_hash = sha256(convert_to(coalesce(p_token, ''), 'UTF8')));
 $$;
 revoke all on function public.ranking_token_ok(uuid, text) from public, anon, authenticated;
+drop function if exists public.ranking_pin_weak(text);
 
--- masuk ranking (kini dengan PIN 4 nombor)
+-- masuk ranking dengan PIN 1000-9999 yang belum diambil orang
 drop function if exists public.ranking_join(text, text, text);
 create or replace function public.ranking_join(p_name text, p_username text, p_app text, p_pin text)
 returns json language plpgsql security definer set search_path = public, extensions as $$
-declare v_id uuid; v_token text := gen_random_uuid()::text || gen_random_uuid()::text;
+declare v_id uuid; v_token text := gen_random_uuid()::text || gen_random_uuid()::text; v_c text;
 begin
-  if coalesce(p_pin, '') !~ '^[0-9]{4}$' then raise exception 'bad_pin'; end if;
+  if coalesce(p_pin, '') !~ '^[1-9][0-9]{3}$' then raise exception 'bad_pin'; end if;
   insert into ranking(name, username, app)
   values (trim(p_name), trim(regexp_replace(p_username, '^@+', '')), trim(p_app))
   returning id into v_id;
-  insert into ranking_keys(id, token_hash, pin_hash)
-  values (v_id, sha256(convert_to(v_token, 'UTF8')), crypt(p_pin, gen_salt('bf')));
+  insert into ranking_keys(id, token_hash, pin_hash, pin_lookup)
+  values (v_id, sha256(convert_to(v_token, 'UTF8')), crypt(p_pin, gen_salt('bf')), ranking_pin_lookup(p_pin));
   insert into ranking_tokens(id, token_hash) values (v_id, sha256(convert_to(v_token, 'UTF8')));
   return json_build_object('id', v_id, 'token', v_token);
 exception when unique_violation then
+  get stacked diagnostics v_c = constraint_name;
+  if v_c = 'ranking_keys_pin_lookup' then raise exception 'pin_taken'; end if;
   raise exception 'username_taken';
 end $$;
 
@@ -70,9 +91,13 @@ create or replace function public.ranking_set_pin(p_id uuid, p_token text, p_pin
 returns void language plpgsql security definer set search_path = public, extensions as $$
 begin
   if not ranking_token_ok(p_id, p_token) then raise exception 'not_allowed'; end if;
-  if coalesce(p_pin, '') !~ '^[0-9]{4}$' then raise exception 'bad_pin'; end if;
-  update ranking_keys set pin_hash = crypt(p_pin, gen_salt('bf')), pin_fails = 0, pin_locked_until = null
+  if coalesce(p_pin, '') !~ '^[1-9][0-9]{3}$' then raise exception 'bad_pin'; end if;
+  update ranking_keys
+     set pin_hash = crypt(p_pin, gen_salt('bf')), pin_lookup = ranking_pin_lookup(p_pin),
+         pin_fails = 0, pin_locked_until = null
    where id = p_id;
+exception when unique_violation then
+  raise exception 'pin_taken';
 end $$;
 
 -- masuk dari browser lain: username + aplikasi + PIN (5 salah = kunci 15 minit)
