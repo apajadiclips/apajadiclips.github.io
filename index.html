@@ -1040,7 +1040,7 @@ html.calm .pattern{animation-play-state:paused!important}
       async function pull() {
         try {
           const r = await fetch(SUPA_URL + "/rest/v1/ranking?select=id,name,username,app,steps&order=steps.desc&limit=50", { headers: H });
-          if (!r.ok) throw new Error(r.status);
+          if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(r.status + " " + (j.code || "") + " " + (j.message || "")); }
           cb && cb((await r.json()).map(norm), null);
         } catch (e) { cb && cb(null, e); }
       }
@@ -1146,6 +1146,7 @@ html.calm .pattern{animation-play-state:paused!important}
         be.refresh();
       } catch (err) {
         say(err.code === "username_taken" ? "rkTaken" : "rkErr");
+        if (err.code !== "username_taken") note.textContent += " [" + String(err.code || err.message || err).slice(0, 120) + "]";
       } finally { busy(false); render(); }
     });
     // only the display name can change; username and app stay as first entered
@@ -1169,7 +1170,7 @@ html.calm .pattern{animation-play-state:paused!important}
       me = be.mine();
       const slow = setTimeout(() => { if (state === "loading") say("rkSlow"); }, 10000);
       be.subscribe((rs, err, cached) => {
-        if (err) { clearTimeout(slow); if (state === "loading") { state = "error"; say("rkSlow"); } return render(); }
+        if (err) { clearTimeout(slow); if (state === "loading") { state = "error"; say("rkSlow"); note.textContent += " [" + String(err.message || err).slice(0, 120) + "]"; } return render(); }
         rows = rs;
         const mine = rows.find(r => r.id === be.myId());
         if (mine) {
