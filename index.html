@@ -1108,6 +1108,8 @@ html.calm .pattern{animation-play-state:paused!important}
           return v;
         },
         async setPin(pin) { await rpc("ranking_set_pin", { p_id: creds.id, p_token: creds.token, p_pin: pin }); },
+        // the row was removed (e.g. the ranking was reset): forget it so the visitor can join again
+        forget() { creds = null; try { localStorage.removeItem("ajc-rank"); } catch (e) {} },
         // an account link still works too
         code: () => creds && creds.id + "." + creds.token,
         async restore(code) {
@@ -1199,7 +1201,15 @@ html.calm .pattern{animation-play-state:paused!important}
       if (saving) { again = true; return; }
       saving = true;
       try { do { again = false; await be.save(steps); } while (again); be.refresh(); }
-      catch (e) { if (e.code === "not_allowed") { blocked = true; say("rkNoWrite"); render(); } }
+      catch (e) {
+        if (e.code === "not_allowed") {
+          if (be.forget) {
+            be.forget(); me = null; say("");
+            steps = 0; countEl.textContent = fmt(0); try { localStorage.setItem("ajc-taps", "0"); } catch (e) {} // fresh start
+          } else { blocked = true; say("rkNoWrite"); }
+          render();
+        }
+      }
       finally { saving = false; }
     }
     function changed() { if (!me) return; clearTimeout(saveT); saveT = setTimeout(save, 2000); }
