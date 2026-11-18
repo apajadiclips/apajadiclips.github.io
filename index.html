@@ -1,0 +1,762 @@
+<!doctype html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style></head><body>
+<title>ApaJadiClips</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&display=swap">
+<style>
+/* Layout: one narrow column — a stage where three logo mascots hop on the name, then a stack of pressable link tiles.
+   Single light look on purpose: a fixed cream pastel ground. */
+:root{
+  color-scheme:light;
+  --bg:#FBF1DE;
+  --card:#FFFCF6;
+  --ink:#1B1622;
+  --muted:#6A6274;
+  --unpainted:#9E8F80;
+  --edge:#1B1622;
+  --drop:#1B1622;
+  --c-black:#111111;
+  --c-teal:#0B929C;
+  --c-purple:#4F1E6E;
+  --display:"Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+  --body:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.45;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:20px 40px;
+  overflow-x:hidden;
+}
+.wrap{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
+.wrap > .controls{margin-bottom:-14px}
+
+/* ---------- Stage ---------- */
+.stage{
+  position:relative;
+  --fs:clamp(32px, 9.6vw, 54px);
+  padding-top:calc(var(--fs) * 2.4);
+  display:flex;flex-direction:column;align-items:center;
+  user-select:none;-webkit-user-select:none;
+}
+h1{
+  position:relative;z-index:1;margin:0;
+  font-family:var(--display);font-weight:800;
+  font-size:var(--fs);line-height:1;letter-spacing:-0.035em;
+  white-space:nowrap;cursor:pointer;
+}
+h1 .ch{color:var(--unpainted);display:inline-block;transform-origin:50% 100%;transition:color .2s ease}
+h1 .ch.stomp{animation:stomp .55s cubic-bezier(.2,.8,.3,1)}
+h1 .ch.nudge{animation:nudge .5s cubic-bezier(.2,.8,.3,1)}
+@keyframes stomp{
+  0%{transform:scale(1,1)}
+  12%{transform:scale(1.22,.62)}
+  38%{transform:scale(.92,1.1)}
+  60%{transform:scale(1.04,.96)}
+  100%{transform:scale(1,1)}
+}
+@keyframes nudge{
+  0%{transform:translateY(0)}
+  20%{transform:translateY(-6%) rotate(var(--tilt,0deg))}
+  100%{transform:translateY(0)}
+}
+
+.mascot{
+  position:absolute;left:0;top:0;z-index:2;
+  width:calc(var(--fs) * .78);
+  aspect-ratio:736/1283;
+  cursor:pointer;
+  will-change:transform;
+  -webkit-tap-highlight-color:transparent;
+  color:var(--c-black);
+  transition:color .12s ease;
+}
+.mascot:focus-visible{outline:3px solid var(--c-teal);outline-offset:6px;border-radius:10px}
+.m-body{width:100%;height:100%;transform-origin:50% 100%}
+.m-inner{width:100%;height:100%;transform-origin:50% 100%;animation:breathe 2.8s ease-in-out infinite}
+.mascot:nth-of-type(2) .m-inner{animation-delay:-.9s}
+.mascot:nth-of-type(3) .m-inner{animation-delay:-1.8s}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.015,1.035)}}
+.mascot svg{display:block;width:100%;height:100%;overflow:visible}
+.mascot .rays{transform-box:fill-box;transform-origin:50% 100%}
+.mascot .rays.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-14%) scale(1.18)}100%{transform:translateY(0) scale(1)}}
+.mascot .ray{animation:flicker 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+.mascot .ray:nth-child(2){animation-delay:.35s}
+.mascot .ray:nth-child(3){animation-delay:.7s}
+@keyframes flicker{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.86)}}
+.mascot .eye{transform-box:view-box;transition:transform .25s cubic-bezier(.3,1.5,.5,1)}
+.mascot .lid{transform-box:fill-box;transform-origin:50% 50%;animation:blink 5.5s infinite}
+.mascot:nth-of-type(2) .lid{animation-delay:-2s}
+.mascot:nth-of-type(3) .lid{animation-delay:-3.7s}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}95.5%{transform:scaleY(.15)}}
+
+.controls{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;
+  font:700 13px/1 var(--body);color:var(--ink);
+  padding:8px 12px 8px 10px;border-radius:999px;
+  background:var(--card);border:2px solid var(--edge);box-shadow:0 3px 0 var(--drop);
+  cursor:pointer;transition:transform .3s cubic-bezier(.3,1.8,.5,1), box-shadow .3s;
+}
+.pill:hover{transform:translateY(-2px);box-shadow:0 5px 0 var(--drop)}
+.pill:active{transform:translateY(2px);box-shadow:0 1px 0 var(--drop)}
+.pill:focus-visible{outline:3px solid var(--c-teal);outline-offset:3px}
+.pill svg{width:18px;height:18px}
+.pill.spin svg{animation:globe .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes globe{from{transform:rotate(-180deg) scale(.6)}to{transform:none}}
+.pill .on{display:none}
+.pill[aria-pressed="true"]{background:var(--c-teal);color:#fff}
+.pill[aria-pressed="true"] .on{display:inline}
+.pill[aria-pressed="true"] .off{display:none}
+#motion[aria-pressed="true"]{background:var(--c-purple)}
+.lang-pill{background:var(--c-black);color:#fff;min-width:74px;justify-content:center}
+.lang-pill span{font-family:var(--display);font-weight:800;letter-spacing:.06em}
+.link.mine{border-color:var(--c-teal);box-shadow:0 5px 0 var(--c-teal)}
+.link.mine:hover{box-shadow:0 8px 0 var(--c-teal)}
+.link.mine:active{box-shadow:0 1px 0 var(--c-teal)}
+.forme{font:700 11px/1 var(--body);letter-spacing:.04em;color:var(--c-teal);margin-top:3px}
+.fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+.boomtxt{
+  position:absolute;left:50%;top:calc(var(--fs) * 1.1);z-index:4;pointer-events:none;
+  font-family:var(--display);font-weight:800;font-size:calc(var(--fs) * 1.25);letter-spacing:-.03em;
+  color:var(--card);-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;
+  text-shadow:4px 5px 0 var(--c-purple);
+  opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-8deg);
+}
+.boomtxt.go{animation:boomtxt 1.3s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes boomtxt{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(-8deg)}
+  18%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(-6deg)}
+  70%{opacity:1;transform:translate(-50%,-60%) scale(1) rotate(-4deg)}
+  100%{opacity:0;transform:translate(-50%,-90%) scale(.9) rotate(-2deg)}
+}
+.group.jolt{animation:jolt .7s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes jolt{0%{transform:none}20%{transform:translateY(10px) scale(.985)}55%{transform:translateY(-6px)}100%{transform:none}}
+h1.shake{animation:shake .5s cubic-bezier(.3,.7,.4,1)}
+@keyframes shake{0%,100%{transform:none}15%{transform:translate(-4px,2px) rotate(-1deg)}30%{transform:translate(4px,-1px) rotate(1deg)}45%{transform:translate(-3px,1px)}60%{transform:translate(2px,0)}75%{transform:translate(-1px,0)}}
+.stage.still .m-inner,.stage.still .ray,.stage.still .lid{animation:none}
+
+/* ---------- Links ---------- */
+.group{display:flex;flex-direction:column;gap:12px}
+.group h2{
+  margin:0 0 2px;font-family:var(--display);font-weight:600;
+  font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+}
+.link{
+  --d:0ms;
+  display:grid;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:14px;
+  padding:12px 16px 12px 12px;
+  background:var(--card);color:var(--ink);text-decoration:none;
+  border:2px solid var(--edge);border-radius:18px;
+  box-shadow:0 5px 0 var(--drop);
+  transition:transform .35s cubic-bezier(.3,1.8,.5,1), box-shadow .35s cubic-bezier(.3,1.8,.5,1);
+  animation:rise .7s cubic-bezier(.25,1.5,.5,1) both;animation-delay:var(--d);
+}
+@keyframes rise{from{opacity:0;transform:translateY(26px) scale(.92)}to{opacity:1;transform:none}}
+.link:hover{transform:translateY(-3px) rotate(-.4deg);box-shadow:0 8px 0 var(--drop)}
+.link:active{transform:translateY(4px) scale(.99);box-shadow:0 1px 0 var(--drop);transition-duration:.08s}
+.link:focus-visible{outline:3px solid var(--c-teal);outline-offset:4px}
+.ico{
+  width:48px;height:48px;border-radius:13px;display:grid;place-items:center;
+  transition:transform .45s cubic-bezier(.3,1.9,.5,1);
+}
+.link:hover .ico{transform:rotate(-8deg) scale(1.08)}
+.ico svg{width:26px;height:26px}
+.yt{background:#FF0033}
+.fb{background:#1877F2}
+.ig{background:radial-gradient(circle at 30% 110%, #FFD25E 0 18%, #F6603C 40%, #D9257E 62%, #7A3BD6 92%)}
+.tt,.th{background:#111114}
+.txt{min-width:0;display:flex;flex-direction:column}
+.name{font-weight:700;font-size:16.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.handle{color:var(--muted);font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.end{display:flex;align-items:center;gap:10px}
+.lang{
+  font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.08em;
+  padding:3px 8px;border-radius:999px;color:#fff;
+}
+.lang.my{background:var(--c-black)}
+.lang.id{background:var(--c-teal)}
+.lang.en{background:var(--c-purple)}
+.arrow{width:18px;height:18px;transition:transform .35s cubic-bezier(.3,1.8,.5,1)}
+.link:hover .arrow{transform:translate(3px,-3px)}
+
+.socials{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.socials .link{grid-template-columns:44px minmax(0,1fr);gap:12px;padding:12px}
+.socials .ico{width:44px;height:44px}
+@media (max-width:420px){ .socials{grid-template-columns:minmax(0,1fr)} }
+
+footer{color:var(--muted);font-size:13px;text-align:center}
+footer b{font-family:var(--display);color:var(--ink)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<template id="mascot-tpl">
+  <div class="mascot" role="button" tabindex="0" aria-label="Tekan logo supaya dia buat flip">
+    <div class="m-body"><div class="m-inner">
+      <svg viewBox="598 322 736 1286" aria-hidden="true">
+        <g class="rays" fill="currentColor">
+          <path class="ray" d="M738 374H829L858 556H767Z"/>
+          <path class="ray" d="M920 328H1011V510H920Z"/>
+          <path class="ray" d="M1102 374H1193L1165 556H1074Z"/>
+        </g>
+        <path fill="currentColor" fill-rule="evenodd" d="M800 1330A198 198 0 0 1 602 1132V828A198 198 0 0 1 800 630H1132A198 198 0 0 1 1330 828V1132A200 200 0 0 1 1148 1329V1512A91 91 0 0 1 1057 1603H875A91 91 0 0 1 784 1512V1420A92 92 0 0 1 875 1512H1057V1320A80 80 0 0 1 1137 1239A102 102 0 0 0 1239 1137V822A102 102 0 0 0 1137 720H795A102 102 0 0 0 693 822V1137A102 102 0 0 0 795 1239A80 80 0 0 1 875 1319V1330Z"/>
+        <g class="eye"><g class="lid">
+          <path d="M835 1068L966 937L1097 1068" fill="none" stroke="currentColor" stroke-width="94" stroke-linejoin="round"/>
+        </g></g>
+      </svg>
+    </div></div>
+  </div>
+</template>
+
+<canvas class="fx" id="fx" aria-hidden="true"></canvas>
+<div class="wrap">
+  <div class="controls">
+    <button class="pill" id="motion" type="button" aria-pressed="true">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path class="on" d="M7 5.5v13l11-6.5z"/><path class="off" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+      <span class="on" data-t="motionOn">Gerak: Buka</span><span class="off" data-t="motionOff">Gerak: Tutup</span>
+    </button>
+    <button class="pill" id="sound" type="button" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/><path class="on" d="M15.5 9a4.5 4.5 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="off" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+      <span class="off" data-t="soundOff">Bunyi: Tutup</span><span class="on" data-t="soundOn">Bunyi: Buka</span>
+    </button>
+    <button class="pill lang-pill" id="lang" type="button" aria-label="Tukar bahasa">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.6 5.2 3.6 8.5s-1 6.1-3.6 8.5M12 3.5C9.4 5.9 8.4 8.7 8.4 12s1 6.1 3.6 8.5"/></svg>
+      <span id="lang-code">BM</span>
+    </button>
+  </div>
+  <section class="stage" id="stage">
+    <h1 id="title" aria-label="ApaJadiClips"></h1>
+    <div class="boomtxt" id="boomtxt" aria-hidden="true">BOOM!</div>
+  </section>
+
+  <section class="group" aria-labelledby="yt-h">
+    <h2 id="yt-h">YouTube</h2>
+    <a class="link" data-lang="bm" style="--d:150ms" href="https://www.youtube.com/@ApaJadiClips" target="_blank" rel="noopener">
+      <span class="ico yt"><svg viewBox="0 0 24 24"><path fill="#fff" d="M9.5 7.6v8.8l7-4.4z"/></svg></span>
+      <span class="txt"><span class="name">ApaJadiClips</span><span class="handle">@ApaJadiClips</span></span>
+      <span class="end"><span class="lang my">MY</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+    </a>
+    <a class="link" data-lang="id" style="--d:230ms" href="https://www.youtube.com/@ApaJadiClipsIndonesia" target="_blank" rel="noopener">
+      <span class="ico yt"><svg viewBox="0 0 24 24"><path fill="#fff" d="M9.5 7.6v8.8l7-4.4z"/></svg></span>
+      <span class="txt"><span class="name">ApaJadiClips Indonesia</span><span class="handle">@ApaJadiClipsIndonesia</span></span>
+      <span class="end"><span class="lang id">ID</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+    </a>
+    <a class="link" data-lang="en" style="--d:310ms" href="https://www.youtube.com/@ApaJadiClipsEnglish" target="_blank" rel="noopener">
+      <span class="ico yt"><svg viewBox="0 0 24 24"><path fill="#fff" d="M9.5 7.6v8.8l7-4.4z"/></svg></span>
+      <span class="txt"><span class="name">ApaJadiClips English</span><span class="handle">@ApaJadiClipsEnglish</span></span>
+      <span class="end"><span class="lang en">EN</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+    </a>
+  </section>
+
+  <section class="group" aria-labelledby="so-h">
+    <h2 id="so-h" data-t="social">Media sosial</h2>
+    <div class="socials">
+      <a class="link" style="--d:390ms" href="https://www.facebook.com/apajadiclips" target="_blank" rel="noopener">
+        <span class="ico fb"><svg viewBox="0 0 24 24"><path fill="#fff" d="M13.4 21v-7.6H16l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H7.8v3h2.6V21z"/></svg></span>
+        <span class="txt"><span class="name">Facebook</span><span class="handle">/apajadiclips</span></span>
+      </a>
+      <a class="link" style="--d:450ms" href="https://www.instagram.com/apajadiclips" target="_blank" rel="noopener">
+        <span class="ico ig"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="#fff" stroke="none"/></svg></span>
+        <span class="txt"><span class="name">Instagram</span><span class="handle">@apajadiclips</span></span>
+      </a>
+      <a class="link" style="--d:510ms" href="https://www.tiktok.com/@apajadiclips" target="_blank" rel="noopener">
+        <span class="ico tt"><svg viewBox="0 0 24 24"><path fill="#25F4EE" d="M15.8 3.4c.3 2.2 1.7 3.7 3.9 3.9v3a7 7 0 0 1-3.9-1.2v6.1a5.6 5.6 0 1 1-5.6-5.6l.9.1v3.1a2.6 2.6 0 1 0 1.7 2.4V3.4z" transform="translate(-.8 .6)"/><path fill="#FE2C55" d="M15.8 3.4c.3 2.2 1.7 3.7 3.9 3.9v3a7 7 0 0 1-3.9-1.2v6.1a5.6 5.6 0 1 1-5.6-5.6l.9.1v3.1a2.6 2.6 0 1 0 1.7 2.4V3.4z" transform="translate(.8 -.2)"/><path fill="#fff" d="M15.8 3.4c.3 2.2 1.7 3.7 3.9 3.9v3a7 7 0 0 1-3.9-1.2v6.1a5.6 5.6 0 1 1-5.6-5.6l.9.1v3.1a2.6 2.6 0 1 0 1.7 2.4V3.4z" transform="translate(0 .2)"/></svg></span>
+        <span class="txt"><span class="name">TikTok</span><span class="handle">@apajadiclips</span></span>
+      </a>
+      <a class="link" style="--d:570ms" href="https://www.threads.com/@apajadiclips" target="_blank" rel="noopener">
+        <span class="ico th"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 20.2a8.2 8.2 0 1 1 8.2-8.2c0 2.4-1.2 3.8-2.9 3.8s-2.6-1.3-2.6-3.2V8.4"/><circle cx="12" cy="12" r="2.8"/></svg></span>
+        <span class="txt"><span class="name">Threads</span><span class="handle">@apajadiclips</span></span>
+      </a>
+    </div>
+  </section>
+
+  <footer>© 2026 <b>ApaJadiClips</b> · <span data-t="footer">Tekan logo, dia akan buat flip.</span></footer>
+</div>
+
+<script>
+(() => {
+  const NAME = "ApaJadiClips";
+  const COLORS = ["var(--c-black)", "var(--c-teal)", "var(--c-purple)"];
+
+  const stage = document.getElementById("stage");
+  const title = document.getElementById("title");
+  const tpl = document.getElementById("mascot-tpl");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const chars = [...NAME].map(c => {
+    const s = document.createElement("span");
+    s.className = "ch"; s.textContent = c; s.setAttribute("aria-hidden", "true");
+    title.appendChild(s); return s;
+  });
+  const N = chars.length, MID = 5;
+
+  // ---- sound: every stomp plays a squishy note; each letter has its own pitch ----
+  const SCALE = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26]; // pentatonic up the name
+  function voice(ac, out, t, i, hard = 1, color = 0) {
+    const f = 262 * Math.pow(2, SCALE[i % SCALE.length] / 12) * [1, 1.5, 2][color % 3] / 1.2;
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = ["triangle", "sine", "triangle"][color % 3];
+    o.frequency.setValueAtTime(f * 1.7, t);
+    o.frequency.exponentialRampToValueAtTime(f, t + .07);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(.32 * hard, t + .008);
+    g.gain.exponentialRampToValueAtTime(.0001, t + .24);
+    o.connect(g).connect(out); o.start(t); o.stop(t + .26);
+    const k = ac.createOscillator(), kg = ac.createGain();
+    k.type = "sine";
+    k.frequency.setValueAtTime(150, t);
+    k.frequency.exponentialRampToValueAtTime(50, t + .1);
+    kg.gain.setValueAtTime(.0001, t);
+    kg.gain.exponentialRampToValueAtTime(.5 * hard, t + .005);
+    kg.gain.exponentialRampToValueAtTime(.0001, t + .14);
+    k.connect(kg).connect(out); k.start(t); k.stop(t + .16);
+  }
+  function whooshVoice(ac, out, t, up = true) {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(up ? 320 : 1100, t);
+    o.frequency.exponentialRampToValueAtTime(up ? 1300 : 380, t + .32);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(.12, t + .05);
+    g.gain.exponentialRampToValueAtTime(.0001, t + .36);
+    o.connect(g).connect(out); o.start(t); o.stop(t + .38);
+  }
+  window.__ajcVoices = { voice, whooshVoice };
+  const sfx = (() => {
+    let ac = null, master = null, on = false;
+    const btn = document.getElementById("sound");
+    const ready = () => on && ac && ac.state === "running";
+    btn.addEventListener("click", () => {
+      on = !on;
+      btn.setAttribute("aria-pressed", on);
+      if (on) {
+        try {
+          if (!ac) {
+            const C = window.AudioContext || window.webkitAudioContext;
+            ac = new C(); master = ac.createGain(); master.gain.value = .6; master.connect(ac.destination);
+          }
+          ac.resume();
+          voice(ac, master, ac.currentTime + .02, 5, 1, 1);
+        } catch (e) { on = false; btn.setAttribute("aria-pressed", false); }
+      }
+    });
+    return {
+      stomp(i, hard, color) { if (ready()) voice(ac, master, ac.currentTime + .005, i, Math.min(hard, 1.5), color); },
+      whoosh(up) { if (ready()) whooshVoice(ac, master, ac.currentTime + .005, up); },
+      charge(sec) { // rising wobble before the explosion
+        if (!ready()) return;
+        const t = ac.currentTime + .01, o = ac.createOscillator(), g = ac.createGain(), lfo = ac.createOscillator(), lg = ac.createGain();
+        o.type = "triangle"; o.frequency.setValueAtTime(160, t); o.frequency.exponentialRampToValueAtTime(900, t + sec);
+        lfo.frequency.setValueAtTime(6, t); lfo.frequency.linearRampToValueAtTime(28, t + sec); lg.gain.value = 30;
+        lfo.connect(lg).connect(o.frequency);
+        g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.18, t + sec * .9); g.gain.exponentialRampToValueAtTime(.0001, t + sec + .05);
+        o.connect(g).connect(master); o.start(t); lfo.start(t); o.stop(t + sec + .1); lfo.stop(t + sec + .1);
+      },
+      boom() { // noise burst through a closing filter, plus a deep thump
+        if (!ready()) return;
+        const t = ac.currentTime + .005, len = ac.sampleRate * 1.2, buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.2);
+        const n = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+        n.buffer = buf; f.type = "lowpass"; f.frequency.setValueAtTime(5000, t); f.frequency.exponentialRampToValueAtTime(180, t + 1.1);
+        g.gain.setValueAtTime(.9, t); g.gain.exponentialRampToValueAtTime(.0001, t + 1.2);
+        n.connect(f).connect(g).connect(master); n.start(t);
+        const k = ac.createOscillator(), kg = ac.createGain();
+        k.type = "sine"; k.frequency.setValueAtTime(120, t); k.frequency.exponentialRampToValueAtTime(32, t + .45);
+        kg.gain.setValueAtTime(.9, t); kg.gain.exponentialRampToValueAtTime(.0001, t + .55);
+        k.connect(kg).connect(master); k.start(t); k.stop(t + .6);
+      },
+    };
+  })();
+
+  // ---- motion on/off ----
+  const STOP = Symbol("stop");
+  let motionOn = !reduce;
+  let interrupt = false, boomPending = false;
+  try { const v = localStorage.getItem("ajc-motion"); if (v !== null) motionOn = v === "1"; } catch (e) {}
+  const motionBtn = document.getElementById("motion");
+
+  const el = tpl.content.firstElementChild.cloneNode(true);
+  stage.insertBefore(el, title);
+  const m = {
+    el, body: el.querySelector(".m-body"), rays: el.querySelector(".rays"), eye: el.querySelector(".eye"),
+    idx: MID, color: 0, x: 0, y: 0, sx: 1, sy: 1, rot: 0, busy: false,
+  };
+  const setColor = k => { m.color = k; el.style.color = COLORS[k]; };
+  const nextColor = () => setColor((m.color + 1) % COLORS.length);
+  setColor(0);
+  el.style.transition = "opacity .25s ease";
+
+  // ---- geometry: where each letter's ink top sits (so the logo stands ON the glyph) ----
+  let spots = [], W = 0, H = 0;
+  const ctx = document.createElement("canvas").getContext("2d");
+  function measure() {
+    const cs = getComputedStyle(title);
+    const fs = parseFloat(cs.fontSize);
+    ctx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    const fm = ctx.measureText("Hg");
+    const asc = fm.fontBoundingBoxAscent ?? fs * .92, desc = fm.fontBoundingBoxDescent ?? fs * .24;
+    const halfLead = (fs - (asc + desc)) / 2;
+    const sr = stage.getBoundingClientRect();
+    W = el.offsetWidth; H = el.offsetHeight;
+    const raw = chars.map(s => {
+      const r = s.getBoundingClientRect();
+      const ink = ctx.measureText(s.textContent).actualBoundingBoxAscent ?? fs * .7;
+      return { l: r.left - sr.left, r: r.right - sr.left, x: r.left - sr.left + r.width / 2, y: r.top - sr.top + halfLead + asc - ink + 1 };
+    });
+    const foot = W * .5;
+    spots = raw.map(c => ({
+      x: c.x,
+      y: Math.min(...raw.filter(o => o.r > c.x - foot && o.l < c.x + foot).map(o => o.y)),
+    }));
+  }
+
+  const render = () => {
+    el.style.transform = `translate(${m.x - W / 2}px, ${m.y - H}px)`;
+    m.body.style.transform = `rotate(${m.rot}deg) scale(${m.sx}, ${m.sy})`;
+  };
+  const look = d => { m.eye.style.transform = `translateX(${d * 70}px)`; };
+  // tweens and waits abort (reject with STOP) the moment motion is switched off
+  const tween = (ms, fn) => new Promise((res, rej) => {
+    const t0 = performance.now();
+    const step = now => {
+      if (!motionOn || interrupt) return rej(STOP);
+      const t = Math.min(1, (now - t0) / ms);
+      fn(t); render();
+      t < 1 ? requestAnimationFrame(step) : res();
+    };
+    requestAnimationFrame(step);
+  });
+  const wait = ms => new Promise((res, rej) => setTimeout(() => (motionOn && !interrupt) ? res() : rej(STOP), ms));
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const restart = (e, cls) => { e.classList.remove(cls); void e.offsetWidth; e.classList.add(cls); };
+
+  // only the letter under the logo's foot takes its colour
+  function stomp(i) {
+    chars[i].style.color = COLORS[m.color];
+    restart(chars[i], "stomp");
+    [i - 1, i + 1].forEach((j, k) => {
+      if (!chars[j]) return;
+      chars[j].style.setProperty("--tilt", (k ? 6 : -6) + "deg");
+      restart(chars[j], "nudge");
+    });
+  }
+  async function land(hard = 1, ms = 520) {
+    stomp(m.idx);
+    sfx.stomp(m.idx, hard, m.color);
+    restart(m.rays, "pop");
+    await tween(ms, t => {
+      const s = Math.exp(-6 * t * 520 / ms) * Math.cos(15 * t * ms / 520);
+      m.sy = 1 - .26 * hard * s; m.sx = 1 + .18 * hard * s;
+    });
+    m.sx = m.sy = 1; render();
+  }
+
+  let flipNext = false; // a tap on the logo turns its next jump into a flip
+  async function hopTo(b, to, opts = {}) {
+    const dir = Math.sign(b.x - m.x) || 0;
+    const dist = Math.abs(b.x - m.x);
+    let spin = opts.spin || 0, h = opts.h ?? (H * .5 + dist * .4), dur = opts.dur;
+    if (flipNext && to != null) { flipNext = false; spin = spin || (dir >= 0 ? 360 : -360); h = Math.max(h, H * 1.1); dur = Math.max(dur || 0, 640); }
+    look(dir);
+    const leaving = to !== m.idx;
+    await tween(opts.prep ?? 130, t => { const e = Math.sin(t * Math.PI / 2); m.sy = 1 - .2 * e; m.sx = 1 + .12 * e; m.rot = -dir * 4 * e; });
+    if (leaving && chars[m.idx]) chars[m.idx].style.color = ""; // letter goes back to normal once the logo lifts off
+    if (spin) { sfx.whoosh(true); m.body.style.transformOrigin = "50% 55%"; } // flip around the belly, not the feet
+    const x0 = m.x, y0 = m.y, x1 = b.x, y1 = b.y;
+    let flipped = false;
+    await tween(dur ?? Math.min(640, 340 + dist * 1.4), t => {
+      const e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      m.x = x0 + (x1 - x0) * e;
+      m.y = y0 + (y1 - y0) * t - h * 4 * t * (1 - t);
+      const stretch = .16 * Math.abs(Math.cos(Math.PI * t));
+      m.sy = 1 + stretch; m.sx = 1 - stretch * .6;
+      // spin is centred on the body, so lift the pivot while flipping
+      m.rot = dir * 10 * Math.sin(Math.PI * t) * (spin ? 0 : 1) + spin * Math.min(1, Math.max(0, (t - .08) / .8));
+      // colour flips at the top of every jump: black → turquoise → purple
+      if (!flipped && t > .45 && to != null) { flipped = true; nextColor(); }
+    });
+    m.rot = 0; m.x = x1; m.y = y1; m.body.style.transformOrigin = "";
+    if (to != null) { m.idx = to; await land(opts.hard ?? 1, opts.settle ?? 520); }
+    look(0);
+  }
+  const hop = (to, opts) => hopTo(spots[to], to, opts);
+
+  async function dropIn(at) {
+    m.idx = at; m.x = spots[at].x;
+    const yEnd = spots[at].y, yStart = -H * 1.6;
+    el.style.opacity = 1;
+    m.sy = 1.2; m.sx = .88;
+    await tween(480, t => { m.y = yStart + (yEnd - yStart) * t * t; });
+    m.y = yEnd;
+    await land(1.4);
+  }
+  async function leave(step) {
+    await wait(260);
+    const out = { x: spots[m.idx].x + step * W * 2.2, y: spots[m.idx].y + H * .3 };
+    sfx.whoosh(true);
+    const fade = wait(380).then(() => { el.style.opacity = 0; });
+    await hopTo(out, null, { h: H * .9, dur: 560 });
+    await fade;
+  }
+
+  // ---- the three routines, played in turn ----
+  // 1. Pijak: hop letter by letter across the whole name
+  async function walk(ltr) {
+    const first = ltr ? 0 : N - 1, last = ltr ? N - 1 : 0, step = ltr ? 1 : -1;
+    await dropIn(first);
+    await wait(240); look(-step); await wait(300); look(step); await wait(300);
+    while (m.idx !== last) await hop(m.idx + step, { prep: 80, dur: 300, settle: 260, h: H * .45 });
+    await leave(step);
+  }
+  // 2. Hentak: bounce higher and higher in the middle, then a giant stomp that ripples out
+  async function quake(ltr) {
+    await dropIn(MID);
+    await wait(300);
+    for (const k of [.25, .5, .8]) await hop(MID, { h: H * k, dur: 300 + k * 200, prep: 90, settle: 260 });
+    look(0); await wait(160);
+    await hop(MID, { h: H * 1.45, dur: 860, prep: 220, hard: 1.8, settle: 700 });
+    restart(title, "shake");
+    for (let d = 1; d < N; d++) {
+      const ring = [MID - d, MID + d].filter(i => i >= 0 && i < N);
+      if (!ring.length) break;
+      const c = COLORS[(m.color + d) % 3];
+      ring.forEach(i => {
+        chars[i].style.color = c; restart(chars[i], "stomp");
+        setTimeout(() => { if (i !== m.idx) chars[i].style.color = ""; }, 380);
+      });
+      sfx.stomp(ring[0], .5, (m.color + d) % 3);
+      await wait(70);
+    }
+    await wait(500);
+    await leave(ltr ? 1 : -1);
+  }
+  // 3. Flip: somersault across the name, three letters at a time
+  async function flips(ltr) {
+    const first = ltr ? 0 : N - 1, last = ltr ? N - 1 : 0, step = ltr ? 1 : -1;
+    await dropIn(first);
+    await wait(320);
+    while (m.idx !== last) {
+      const to = ltr ? Math.min(last, m.idx + 3) : Math.max(last, m.idx - 3);
+      await hop(to, { spin: 360 * step, h: H * 1.05, dur: 620, prep: 160, settle: 420, hard: 1.2 });
+      await wait(60);
+    }
+    await wait(200);
+    await hop(m.idx, { spin: -720 * step, h: H * 1.35, dur: 860, prep: 200, hard: 1.5 }); // double backflip finale
+    await leave(step);
+  }
+  // ---- 30 seconds on the page: the logo charges up and explodes ----
+  const fx = document.getElementById("fx"), fctx = fx.getContext("2d");
+  const boomtxt = document.getElementById("boomtxt");
+  const HEX = ["#111111", "#0B929C", "#4F1E6E"];
+  let parts = [], rings = [], fxRun = false;
+  function sizeFx() {
+    const d = Math.min(2, window.devicePixelRatio || 1);
+    fx.width = innerWidth * d; fx.height = innerHeight * d;
+    fctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  function burst(cx, cy) {
+    sizeFx();
+    for (let i = 0; i < 120; i++) {
+      const a = Math.random() * Math.PI * 2, sp = 3 + Math.random() * 10;
+      parts.push({ x: cx, y: cy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 3.5, r: Math.random() * 6, vr: (Math.random() - .5) * .45,
+        s: 5 + Math.random() * 9, kind: i % 3, c: HEX[(i * 7) % 3], life: 1, decay: .008 + Math.random() * .008 });
+    }
+    rings.push({ x: cx, y: cy, r: 8, a: 1, c: HEX[1] }, { x: cx, y: cy, r: 2, a: 1, c: HEX[2], slow: true });
+    if (!fxRun) { fxRun = true; requestAnimationFrame(tick); }
+  }
+  function tick() {
+    fctx.clearRect(0, 0, innerWidth, innerHeight);
+    rings.forEach(g => {
+      g.r += g.slow ? 7 : 13; g.a -= .035;
+      fctx.globalAlpha = Math.max(0, g.a); fctx.strokeStyle = g.c; fctx.lineWidth = 8 * g.a + 1;
+      fctx.beginPath(); fctx.arc(g.x, g.y, g.r, 0, Math.PI * 2); fctx.stroke();
+    });
+    rings = rings.filter(g => g.a > 0);
+    parts.forEach(p => {
+      p.vy += .28; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life -= p.decay;
+      fctx.globalAlpha = Math.max(0, Math.min(1, p.life * 1.6));
+      fctx.save(); fctx.translate(p.x, p.y); fctx.rotate(p.r);
+      fctx.fillStyle = p.c; fctx.strokeStyle = p.c;
+      if (p.kind === 0) fctx.fillRect(-p.s * .28, -p.s * .7, p.s * .56, p.s * 1.4);          // a ray
+      else if (p.kind === 1) { fctx.beginPath(); fctx.arc(0, 0, p.s * .45, 0, Math.PI * 2); fctx.fill(); }
+      else { fctx.lineWidth = p.s * .35; fctx.lineJoin = "round"; fctx.beginPath();       // a little chevron
+        fctx.moveTo(-p.s * .6, p.s * .3); fctx.lineTo(0, -p.s * .3); fctx.lineTo(p.s * .6, p.s * .3); fctx.stroke(); }
+      fctx.restore();
+    });
+    fctx.globalAlpha = 1;
+    parts = parts.filter(p => p.life > 0 && p.y < innerHeight + 60);
+    if (parts.length || rings.length) requestAnimationFrame(tick);
+    else { fxRun = false; fctx.clearRect(0, 0, innerWidth, innerHeight); }
+  }
+  function scatter() {
+    chars.forEach((c, i) => {
+      c.classList.remove("stomp", "nudge");
+      const d = i - MID - .5;
+      c.style.transition = "transform .4s cubic-bezier(.15,.8,.3,1), color .2s";
+      c.style.transform = `translate(${d * 9 + (Math.random() - .5) * 18}px, ${-(24 + Math.random() * 46)}px) rotate(${(Math.random() - .5) * 80}deg)`;
+      c.style.color = COLORS[i % 3];
+    });
+    setTimeout(() => {
+      chars.forEach(c => { c.style.transition = "transform .9s cubic-bezier(.3,1.7,.5,1), color .5s"; c.style.transform = ""; c.style.color = ""; });
+      setTimeout(() => chars.forEach(c => { c.style.transition = ""; }), 950);
+    }, 750);
+  }
+  async function boom() {
+    chars.forEach(c => { c.style.color = ""; c.classList.remove("stomp", "nudge"); });
+    m.rot = 0; m.sx = m.sy = 1; m.body.style.transformOrigin = "";
+    if (el.style.opacity === "0") await dropIn(MID);
+    else await hop(MID, { h: H * .7 });
+    await wait(200); look(-1); await wait(260); look(1); await wait(260); look(0); await wait(160);
+    // charge up: swell, tremble, flash through the three colours
+    sfx.charge(1.25);
+    const x0 = m.x; let last = -1;
+    await tween(1250, t => {
+      const g = 1 + .6 * t * t;
+      m.sx = g * (1 + .05 * Math.sin(t * 95)); m.sy = g * (1 + .05 * Math.cos(t * 83));
+      m.x = x0 + (Math.random() - .5) * 7 * t;
+      const f = Math.floor(t * t * 16); if (f !== last) { last = f; nextColor(); }
+    });
+    m.x = x0;
+    const r = el.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height * .6);
+    sfx.boom();
+    el.style.transition = "none"; el.style.opacity = 0; void el.offsetWidth; el.style.transition = "opacity .25s ease";
+    m.sx = m.sy = 1; render();
+    restart(boomtxt, "go"); restart(title, "shake");
+    document.querySelectorAll(".group").forEach((g, i) => { g.style.animationDelay = i * 90 + "ms"; restart(g, "jolt"); });
+    scatter();
+    await wait(1800);
+    await dropIn(MID); // ...and it's back, a bit dazed
+    await wait(300); look(-1); await wait(380); look(1); await wait(380); look(0); await wait(400);
+    await leave(1);
+  }
+  let seen = 0;
+  const boomTimer = setInterval(() => {
+    if (document.hidden) return;
+    seen += 250;
+    if (seen >= 30000) { clearInterval(boomTimer); boomPending = true; if (m.busy) interrupt = true; }
+  }, 250);
+
+  const ROUTINES = [walk, quake, flips];
+
+  function rest() {
+    chars.forEach(c => { c.style.color = ""; c.style.transform = ""; c.style.transition = ""; c.classList.remove("stomp", "nudge"); });
+    title.classList.remove("shake");
+    m.rot = 0; m.sx = m.sy = 1; m.idx = MID; look(0); m.body.style.transformOrigin = "";
+    if (spots.length) { m.x = spots[MID].x; m.y = spots[MID].y; render(); }
+    el.style.opacity = 1;
+  }
+
+  async function show() {
+    let k = 0;
+    for (;;) {
+      while (!motionOn || document.hidden) await sleep(250);
+      if (boomPending) {
+        interrupt = false; boomPending = false; m.busy = true;
+        try { await boom(); }
+        catch (e) { if (e !== STOP) console.error(e); }
+        finally { m.busy = false; }
+        if (!motionOn) { rest(); continue; }
+        await sleep(500);
+        continue;
+      }
+      m.busy = true;
+      try { await ROUTINES[k % ROUTINES.length](k % 2 === 0); }
+      catch (e) { if (e !== STOP) console.error(e); }
+      finally { m.busy = false; }
+      if (!motionOn) { rest(); continue; }
+      k++;
+      await sleep(500);
+    }
+  }
+
+  function setMotion(on) {
+    motionOn = on;
+    motionBtn.setAttribute("aria-pressed", on);
+    stage.classList.toggle("still", !on);
+    try { localStorage.setItem("ajc-motion", on ? "1" : "0"); } catch (e) {}
+    if (!on) rest(); else el.style.opacity = 0;
+  }
+  motionBtn.addEventListener("click", () => setMotion(!motionOn));
+
+  const tapLogo = () => { if (motionOn) flipNext = true; };
+  el.addEventListener("click", tapLogo);
+  el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tapLogo(); } });
+
+  let rt;
+  addEventListener("resize", () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => { measure(); if (!m.busy) { m.x = spots[m.idx].x; m.y = spots[m.idx].y; render(); } }, 120);
+  });
+
+  // ---- language: BM / EN / ID ----
+  const T = {
+    bm: { html: "ms", code: "BM", motionOn: "Gerak: Buka", motionOff: "Gerak: Tutup", soundOn: "Bunyi: Buka", soundOff: "Bunyi: Tutup",
+          social: "Media sosial", footer: "Tekan logo, dia akan buat flip.", logo: "Tekan logo supaya dia buat flip",
+          lang: "Tukar bahasa (sekarang Bahasa Melayu)", forme: "Saluran dalam bahasa anda" },
+    en: { html: "en", code: "EN", motionOn: "Motion: On", motionOff: "Motion: Off", soundOn: "Sound: On", soundOff: "Sound: Off",
+          social: "Social media", footer: "Tap the logo to make it flip.", logo: "Tap the logo to make it flip",
+          lang: "Change language (now English)", forme: "Channel in your language" },
+    id: { html: "id", code: "ID", motionOn: "Gerak: Nyala", motionOff: "Gerak: Mati", soundOn: "Suara: Nyala", soundOff: "Suara: Mati",
+          social: "Media sosial", footer: "Ketuk logonya, dia bakal salto.", logo: "Ketuk logo supaya dia salto",
+          lang: "Ganti bahasa (sekarang Bahasa Indonesia)", forme: "Kanal dalam bahasamu" },
+  };
+  const ORDER = ["bm", "en", "id"];
+  const langBtn = document.getElementById("lang");
+  const ytGroup = document.querySelector('[aria-labelledby="yt-h"]');
+  const ytLinks = [...ytGroup.querySelectorAll("a[data-lang]")];
+  function setLang(code, save) {
+    const t = T[code] || T.bm;
+    document.documentElement.lang = t.html;
+    document.querySelectorAll("[data-t]").forEach(n => { n.textContent = t[n.dataset.t]; });
+    document.getElementById("lang-code").textContent = t.code;
+    langBtn.setAttribute("aria-label", t.lang);
+    el.setAttribute("aria-label", t.logo);
+    // the viewer's own channel goes to the top and is marked
+    const mine = ytLinks.find(a => a.dataset.lang === code);
+    ytLinks.forEach(a => { a.classList.toggle("mine", a === mine); a.querySelector(".forme")?.remove(); });
+    if (mine) {
+      ytGroup.insertBefore(mine, ytGroup.querySelector("a[data-lang]"));
+      const tag = document.createElement("span"); tag.className = "forme"; tag.textContent = t.forme;
+      mine.querySelector(".txt").appendChild(tag);
+    }
+    langBtn.dataset.code = code;
+    if (save) { try { localStorage.setItem("ajc-lang", code); } catch (e) {} }
+  }
+  let startLang = null;
+  try { startLang = localStorage.getItem("ajc-lang"); } catch (e) {}
+  if (!T[startLang]) {
+    const nav = (navigator.languages || [navigator.language || ""]).map(x => x.toLowerCase());
+    startLang = nav.find(x => /^(ms|id|en)/.test(x));
+    startLang = startLang ? ({ ms: "bm", id: "id", en: "en" })[startLang.slice(0, 2)] : "bm";
+  }
+  setLang(startLang, false);
+  langBtn.addEventListener("click", () => {
+    setLang(ORDER[(ORDER.indexOf(langBtn.dataset.code) + 1) % ORDER.length], true);
+    restart(langBtn, "spin");
+  });
+  // let hover/press work once the entrance animation is done
+  document.querySelectorAll(".link").forEach(a => a.addEventListener("animationend", e => { if (e.animationName === "rise") a.style.animation = "none"; }));
+
+  measure(); rest();
+  const fontsReady = document.fonts ? Promise.race([document.fonts.ready, sleep(1500)]) : Promise.resolve();
+  fontsReady.then(() => requestAnimationFrame(() => {
+    measure(); rest();
+    setMotion(motionOn);
+    show();
+  }));
+})();
+</script>
+</body></html>
