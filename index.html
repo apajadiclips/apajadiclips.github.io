@@ -272,12 +272,11 @@ html.calm .pattern{animation-play-state:paused!important}
 .laugh{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:var(--ink);cursor:pointer;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));animation:laughIn .3s ease-out}
 .laugh-in{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;max-width:560px}
-.laugh-logo{width:min(26vw,120px);aspect-ratio:736/1283;color:var(--c-teal);animation:laughHop .5s ease-in-out infinite alternate}
-.laugh-logo svg{width:100%;height:100%;display:block;overflow:visible}
+.laugh-face{width:min(56vw,250px);height:auto;max-width:100%;transform-origin:50% 90%;animation:laughHop .32s ease-in-out infinite alternate;filter:drop-shadow(0 12px 22px rgba(0,0,0,.45))}
 .laugh-t{margin:0;font:800 clamp(30px, 9.5vw, 72px)/1.04 var(--display);letter-spacing:-.02em;color:var(--bg);text-wrap:balance;overflow-wrap:anywhere;animation:laughShake .35s ease-in-out infinite}
 .laugh-s{margin:0;font:600 14px var(--body);color:color-mix(in srgb, var(--bg) 70%, transparent)}
 @keyframes laughIn{from{opacity:0;transform:scale(1.08)}to{opacity:1;transform:none}}
-@keyframes laughHop{from{transform:translateY(0) rotate(-8deg) scale(1.05,.95)}to{transform:translateY(-18%) rotate(8deg) scale(.96,1.05)}}
+@keyframes laughHop{from{transform:translateY(0) rotate(-6deg) scale(1.06,.94)}to{transform:translateY(-9%) rotate(6deg) scale(.97,1.04)}}
 @keyframes laughShake{0%,100%{transform:rotate(-1.5deg)}50%{transform:rotate(1.5deg) scale(1.02)}}
 /* ranking */
 .rk-mode{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--bg);border-radius:12px}
@@ -377,7 +376,7 @@ html.calm .pattern{animation-play-state:paused!important}
   <path d="M835 1068L966 937L1097 1068" fill="none" stroke="currentColor" stroke-width="94" stroke-linejoin="round"/></g></symbol></defs></svg>
 <div class="laugh" id="laugh" role="alert" hidden>
   <div class="laugh-in">
-    <span class="laugh-logo"><svg><use href="#logo"/></svg></span>
+    <img class="laugh-face" src="laugh-face.webp" alt="" width="258" height="274" decoding="async">
     <p class="laugh-t" id="laugh-t">TAKKAN DAH LUPA PIN KOT.....HAHAHAHA</p>
     <p class="laugh-s" id="laugh-s">Tekan mana-mana untuk cuba lagi</p>
   </div>
@@ -600,6 +599,36 @@ html.calm .pattern{animation-play-state:paused!important}
         lfo.connect(lg).connect(o.frequency);
         g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.18, t + sec * .9); g.gain.exponentialRampToValueAtTime(.0001, t + sec + .05);
         o.connect(g).connect(master); o.start(t); lfo.start(t); o.stop(t + sec + .1); lfo.stop(t + sec + .1);
+      },
+      laugh() {
+        try {
+          if (!ac) { const C = window.AudioContext || window.webkitAudioContext; ac = new C(); master = ac.createGain(); master.gain.value = .6; master.connect(ac.destination); }
+          ac.resume();
+        } catch (e) { return; }
+        const t0 = ac.currentTime + .03, out = ac.createGain(); out.gain.value = .55; out.connect(master);
+        const n = 9;
+        for (let i = 0; i < n; i++) {
+          const t = t0 + i * .16 + (i === n - 1 ? .05 : 0), long = i === n - 1;
+          const f0 = 330 - i * 12 + (i % 2) * 18, dur = long ? .42 : .13;
+          // the "h": a puff of breath
+          const len = Math.floor(ac.sampleRate * .05), nb = ac.createBuffer(1, len, ac.sampleRate), d = nb.getChannelData(0);
+          for (let j = 0; j < len; j++) d[j] = (Math.random() * 2 - 1) * (1 - j / len);
+          const ns = ac.createBufferSource(), nf = ac.createBiquadFilter(), ng = ac.createGain();
+          ns.buffer = nb; nf.type = "highpass"; nf.frequency.value = 1800; ng.gain.value = .18;
+          ns.connect(nf).connect(ng).connect(out); ns.start(t);
+          // the "a": a voice-like buzz shaped by two vowel formants
+          const o = ac.createOscillator(), g = ac.createGain(), f1 = ac.createBiquadFilter(), f2 = ac.createBiquadFilter(), mix = ac.createGain();
+          o.type = "sawtooth";
+          o.frequency.setValueAtTime(f0 * 1.08, t + .02);
+          o.frequency.exponentialRampToValueAtTime(f0 * (long ? .72 : .9), t + .02 + dur);
+          f1.type = "bandpass"; f1.frequency.value = 820; f1.Q.value = 6;
+          f2.type = "bandpass"; f2.frequency.value = 1250; f2.Q.value = 8;
+          g.gain.setValueAtTime(.0001, t + .02);
+          g.gain.exponentialRampToValueAtTime(1, t + .045);
+          g.gain.exponentialRampToValueAtTime(.0001, t + .02 + dur);
+          o.connect(g); g.connect(f1); g.connect(f2); f1.connect(mix); f2.connect(mix); mix.gain.value = 2.2; mix.connect(out);
+          o.start(t + .02); o.stop(t + .04 + dur);
+        }
       },
       boom() { // noise burst through a closing filter, plus a deep thump
         if (!ready()) return;
@@ -1310,7 +1339,7 @@ html.calm .pattern{animation-play-state:paused!important}
     function laugh() {
       const tt = t();
       $("laugh-t").textContent = tt.laughT; $("laugh-s").textContent = tt.laughS;
-      laughBox.hidden = false; sfx.whoosh(true);
+      laughBox.hidden = false; sfx.laugh();
       clearTimeout(laughT); laughT = setTimeout(hideLaugh, 3500);
     }
     function hideLaugh() { laughBox.hidden = true; clearTimeout(laughT); $("rk-l-pin").value = ""; $("rk-l-pin").focus(); }
