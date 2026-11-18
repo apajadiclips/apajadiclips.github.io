@@ -1,12 +1,34 @@
-<!doctype html><html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style></head><body>
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ApaJadiClips</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Semua saluran ApaJadiClips di satu tempat: YouTube (BM, Indonesia, English), TikTok, Instagram, Facebook dan Threads.">
+<link rel="canonical" href="https://apajadiclips.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ApaJadiClips">
+<meta property="og:title" content="ApaJadiClips">
+<meta property="og:description" content="Semua saluran ApaJadiClips di satu tempat: YouTube (BM, Indonesia, English), TikTok, Instagram, Facebook dan Threads.">
+<meta property="og:url" content="https://apajadiclips.github.io/">
+<meta property="og:image" content="https://apajadiclips.github.io/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Tiga logo ApaJadiClips berdiri atas nama ApaJadiClips">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ApaJadiClips">
+<meta name="twitter:description" content="Semua saluran ApaJadiClips di satu tempat: YouTube (BM, Indonesia, English), TikTok, Instagram, Facebook dan Threads.">
+<meta name="twitter:image" content="https://apajadiclips.github.io/og-image.png">
+<meta name="theme-color" content="#FBF1DE">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&display=swap">
 <style>
-/* Layout: one narrow column — a stage where three logo mascots hop on the name, then a stack of pressable link tiles.
-   Single light look on purpose: a fixed cream pastel ground. */
+/* Layout: one narrow column — a stage where the logo hops on the name, then pressable link tiles.
+   Cream pastel by day; our own night mode switches the tokens. */
 :root{
   color-scheme:light;
   --bg:#FBF1DE;
@@ -21,13 +43,25 @@
   --c-purple:#4F1E6E;
   --display:"Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
   --body:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --shade:rgba(27,22,34,.32);
 }
+/* night mode: our own switch (auto at night or when the phone is dark) */
+:root[data-night="1"]{
+  color-scheme:dark;
+  --bg:#130F19; --card:#1F1929; --ink:#F3EEF8; --muted:#B4A9C4; --unpainted:#6B5F7E;
+  --edge:#F3EEF8; --drop:#F3EEF8; --shade:rgba(0,0,0,.6);
+  --c-black:#F3EEF8; --c-teal:#3FD3DB; --c-purple:#B98AE8;
+}
+:root[data-night="1"] .mascot svg{filter:drop-shadow(0 0 7px currentColor)}
+:root[data-night="1"] .pill[aria-pressed="true"],:root[data-night="1"] .lang:not(.my){color:#130F19}
+:root[data-night="1"] .tt,:root[data-night="1"] .th{box-shadow:inset 0 0 0 1.5px #4A4258}
 
 *{box-sizing:border-box}
 html,body{min-height:100%}
 html{overflow-x:hidden}
 .stage{overflow-x:clip} /* the logo jumping off-stage must never widen the page */
 body{
+  position:relative;
   background:var(--bg);
   color:var(--ink);
   font-family:var(--body);
@@ -37,8 +71,9 @@ body{
   padding-right:max(16px, env(safe-area-inset-right, 0px));
   padding-block:20px 40px;
   overflow-x:hidden;
+  transition:background-color .6s ease, color .6s ease;
 }
-.wrap{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
+.wrap{position:relative;z-index:1;max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
 .wrap > .controls{margin-bottom:-14px}
 
 /* ---------- Stage ---------- */
@@ -72,7 +107,7 @@ h1 .ch.nudge{animation:nudge .5s cubic-bezier(.2,.8,.3,1)}
 }
 
 .mascot{
-  position:absolute;left:0;top:0;z-index:2;
+  position:absolute;left:0;top:0;z-index:3;
   width:calc(var(--fs) * .78);
   aspect-ratio:736/1283;
   cursor:pointer;
@@ -120,7 +155,7 @@ h1 .ch.nudge{animation:nudge .5s cubic-bezier(.2,.8,.3,1)}
 .pill[aria-pressed="true"] .on{display:inline}
 .pill[aria-pressed="true"] .off{display:none}
 #motion[aria-pressed="true"]{background:var(--c-purple)}
-.lang-pill{background:var(--c-black);color:#fff;min-width:74px;justify-content:center}
+.lang-pill{background:var(--ink);color:var(--bg);min-width:74px;justify-content:center}
 .lang-pill span{font-family:var(--display);font-weight:800;letter-spacing:.06em}
 .link.mine{border-color:var(--c-teal);box-shadow:0 5px 0 var(--c-teal)}
 .link.mine:hover{box-shadow:0 8px 0 var(--c-teal)}
@@ -185,7 +220,7 @@ h1.shake{animation:shake .5s cubic-bezier(.3,.7,.4,1)}
   font-family:var(--display);font-weight:800;font-size:12px;letter-spacing:.08em;
   padding:3px 8px;border-radius:999px;color:#fff;
 }
-.lang.my{background:var(--c-black)}
+.lang.my{background:var(--ink);color:var(--bg)}
 .lang.id{background:var(--c-teal)}
 .lang.en{background:var(--c-purple)}
 .arrow{width:18px;height:18px;transition:transform .35s cubic-bezier(.3,1.8,.5,1)}
@@ -199,6 +234,83 @@ h1.shake{animation:shake .5s cubic-bezier(.3,.7,.4,1)}
 footer{color:var(--muted);font-size:13px;text-align:center}
 footer b{font-family:var(--display);color:var(--ink)}
 
+.pattern{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.075;background:var(--ink);
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%2723%27%20y%3D%2724%27%20width%3D%2718%27%20height%3D%2717%27%20rx%3D%275%27/%3E%3Cpath%20d%3D%27M28%2035l4-4%204%204M27%2018l1%203M32%2017v3.5M37%2018l-1%203%27/%3E%3C/g%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%2723%27%20y%3D%2724%27%20width%3D%2718%27%20height%3D%2717%27%20rx%3D%275%27/%3E%3Cpath%20d%3D%27M28%2035l4-4%204%204M27%2018l1%203M32%2017v3.5M37%2018l-1%203%27/%3E%3C/g%3E%3C/svg%3E");-webkit-mask-size:64px 64px;mask-size:64px 64px;
+  -webkit-mask-position:0 0;mask-position:0 0;animation:drift 36s linear infinite}
+@keyframes drift{from{-webkit-mask-position:0 0;mask-position:0 0}to{-webkit-mask-position:64px 64px;mask-position:64px 64px}}
+html.calm .pattern{animation-play-state:paused!important}
+.shadow{position:absolute;left:0;top:0;z-index:2;width:calc(var(--fs) * .95);height:calc(var(--fs) * .2);border-radius:50%;
+  background:radial-gradient(closest-side, var(--shade), transparent);pointer-events:none;will-change:transform,opacity}
+.count{position:relative;z-index:1;margin-top:10px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.count b{display:inline-block;margin-right:3px;color:var(--ink);font-family:var(--display);font-weight:800;font-size:15px;transform-origin:50% 80%}
+.count b.bump{animation:bump .35s cubic-bezier(.3,1.8,.5,1)}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+.boomtxt.small{font-size:calc(var(--fs) * .78);white-space:nowrap}
+#night{padding:8px;min-width:36px;justify-content:center}
+#night .sun{display:none}
+:root[data-night="1"] #night{background:var(--c-purple);color:#130F19}
+:root[data-night="1"] #night .sun{display:inline}
+:root[data-night="1"] #night .moon{display:none}
+@media (max-width:430px){ .pill{font-size:12px;padding:7px 10px 7px 8px;gap:5px} .pill svg{width:16px;height:16px} #night{padding:7px} .lang-pill{min-width:62px} }
+/* two pages: links and game */
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border:2px solid var(--edge);border-radius:16px;background:var(--card);box-shadow:0 4px 0 var(--drop);margin-bottom:-8px}
+.tab{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:11px;text-decoration:none;color:var(--muted);font:800 15px/1 var(--display);transition:background-color .25s, color .25s}
+.tab svg{width:18px;height:18px}
+.tab[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.tab:focus-visible{outline:3px solid var(--c-teal);outline-offset:2px}
+:root:not([data-route="game"]) [data-page="game"],:root[data-route="game"] [data-page="pautan"]{display:none!important}
+/* ranking */
+[hidden]{display:none!important}
+.rk-card{background:var(--card);border:2px solid var(--edge);border-radius:20px;box-shadow:0 5px 0 var(--drop);padding:14px;display:flex;flex-direction:column;gap:12px}
+.rk-sub{margin:0;font-size:13.5px;color:var(--muted)}
+.rk-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.rk-form input{min-width:0;font:600 15px var(--body);color:var(--ink);background:var(--bg);border:2px solid var(--edge);border-radius:12px;padding:10px 12px}
+.rk-form input:focus-visible{outline:3px solid var(--c-teal);outline-offset:1px}
+.rk-form .rk-join{grid-column:1 / -1;justify-content:center;padding:11px;font-size:14px;background:var(--c-teal);color:#fff}
+:root[data-night="1"] .rk-form .rk-join{color:#130F19}
+@media (max-width:380px){ .rk-form{grid-template-columns:minmax(0,1fr)} }
+.rk-me{display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--bg);border-radius:12px;padding:9px 12px;font-size:14px}
+.rk-me-txt{min-width:0;overflow:hidden}
+.rk-lock{margin:-4px 0 0;font-size:12.5px;color:var(--muted)}
+.rk-form .full{grid-column:1 / -1}
+.rk-me-txt{display:flex;flex-direction:column;gap:2px}
+.rk-place{font-size:12.5px;color:var(--ink);font-weight:700}
+.rk-edit{font:700 13px var(--body);color:var(--c-teal);background:none;border:0;cursor:pointer;padding:4px;text-decoration:underline;white-space:nowrap}
+.rk-edit:focus-visible{outline:3px solid var(--c-teal);border-radius:6px}
+.rk-rename{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rk-rename input{flex:1 1 160px;min-width:0;font:600 15px var(--body);color:var(--ink);background:var(--bg);border:2px solid var(--edge);border-radius:12px;padding:10px 12px}
+.rk-rename input:focus-visible{outline:3px solid var(--c-teal);outline-offset:1px}
+.rk-rename .rk-join{padding:10px 16px;background:var(--c-teal);color:#fff}
+.rk-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.rk-row{position:relative;display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;overflow:hidden;isolation:isolate}
+.rk-bar{position:absolute;inset:0 auto 0 0;width:var(--w);z-index:-1;border-radius:12px;background:var(--barc);opacity:.18;transition:width .6s cubic-bezier(.3,1.4,.5,1)}
+.rk-row.me{outline:2px solid var(--c-teal);outline-offset:-2px}
+.rk-pos{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;font:800 13px/1 var(--display);background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums}
+.rk-row:nth-child(1) .rk-pos{background:#FFB627;color:#1B1622}
+.rk-row:nth-child(2) .rk-pos{background:#C9CED6;color:#1B1622}
+.rk-row:nth-child(3) .rk-pos{background:#D89A62;color:#1B1622}
+.rk-who{min-width:0;display:flex;flex-direction:column}
+.rk-who{gap:1px}
+.rk-line{display:grid;grid-template-columns:68px minmax(0,1fr);gap:6px;font-size:13px;line-height:1.35}
+.rk-lbl{color:var(--muted);font-size:12px}
+.rk-val{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.rk-n .rk-val{font-weight:800;font-size:15px}
+.rk-ap .rk-val{display:inline-flex;align-items:center;gap:5px}
+.rk-ap .rk-val::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--appc, var(--muted))}
+.rk-row{align-items:start}
+.rk-pos{margin-top:2px}
+.rk-app{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.rk-app::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--appc, var(--muted))}
+.rk-s{font:800 16px/1 var(--display);font-variant-numeric:tabular-nums;text-align:right}
+.rk-s small{display:block;font:600 11px var(--body);color:var(--muted);margin-bottom:3px}
+.rk-s span{font:800 20px/1 var(--display)}
+.rk-note{margin:0;font-size:13.5px;color:var(--muted);text-align:center}
+.rk-note:empty{display:none}
+/* share row */
+.share{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px}
+.share .url{font:600 13px var(--body);color:var(--muted);user-select:all;-webkit-user-select:all}
+#copy.done{background:var(--c-teal);color:#fff}
+:root[data-night="1"] #copy.done{color:#130F19}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
@@ -222,6 +334,11 @@ footer b{font-family:var(--display);color:var(--ink)}
   </div>
 </template>
 
+<div class="pattern" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="logo" viewBox="598 322 736 1286"><g fill="currentColor">
+  <path d="M738 374H829L858 556H767Z"/><path d="M920 328H1011V510H920Z"/><path d="M1102 374H1193L1165 556H1074Z"/>
+  <path fill-rule="evenodd" d="M800 1330A198 198 0 0 1 602 1132V828A198 198 0 0 1 800 630H1132A198 198 0 0 1 1330 828V1132A200 200 0 0 1 1148 1329V1512A91 91 0 0 1 1057 1603H875A91 91 0 0 1 784 1512V1420A92 92 0 0 1 875 1512H1057V1320A80 80 0 0 1 1137 1239A102 102 0 0 0 1239 1137V822A102 102 0 0 0 1137 720H795A102 102 0 0 0 693 822V1137A102 102 0 0 0 795 1239A80 80 0 0 1 875 1319V1330Z"/>
+  <path d="M835 1068L966 937L1097 1068" fill="none" stroke="currentColor" stroke-width="94" stroke-linejoin="round"/></g></symbol></defs></svg>
 <canvas class="fx" id="fx" aria-hidden="true"></canvas>
 <div class="wrap">
   <div class="controls">
@@ -237,13 +354,54 @@ footer b{font-family:var(--display);color:var(--ink)}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.6 5.2 3.6 8.5s-1 6.1-3.6 8.5M12 3.5C9.4 5.9 8.4 8.7 8.4 12s1 6.1 3.6 8.5"/></svg>
       <span id="lang-code">BM</span>
     </button>
+    <button class="pill" id="night" type="button" aria-pressed="false" aria-label="Mod malam">
+      <svg class="moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+    </button>
   </div>
+  <nav class="tabs" aria-label="Halaman">
+    <a class="tab" href="#pautan" data-route="pautan">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg>
+      <span data-t="tabLinks">Pautan</span>
+    </a>
+    <a class="tab" href="#game" data-route="game">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4h10v3a5 5 0 0 1-4 4.9V15h3v2H8v-2h3v-3.1A5 5 0 0 1 7 7zM4 5h2v2.5A2.5 2.5 0 0 1 4 10zm16 0h-2v2.5A2.5 2.5 0 0 0 20 10zM7 19h10v2H7z"/></svg>
+      <span data-t="tabGame">Game</span>
+    </a>
+  </nav>
   <section class="stage" id="stage">
     <h1 id="title" aria-label="ApaJadiClips"></h1>
     <div class="boomtxt" id="boomtxt" aria-hidden="true">BOOM!</div>
+    <div class="count" data-page="game" aria-live="off"><b id="count">0</b> <span data-t="steps">pijakan setakat ini</span></div>
   </section>
 
-  <section class="group" aria-labelledby="yt-h">
+  <section class="group rank" id="rank" data-page="game" aria-labelledby="rk-h">
+    <h2 id="rk-h" data-t="rkTitle">Ranking pijakan</h2>
+    <div class="rk-card">
+      <p class="rk-sub" data-t="rkSub">Tekan logo untuk pijak. 10 teratas masuk carta.</p>
+      <form class="rk-form" id="rk-form" hidden>
+        <input id="rk-dname" class="full" maxlength="20" autocomplete="nickname" data-tp="rkDname" placeholder="Nama" required>
+        <input id="rk-user" maxlength="25" autocomplete="off" autocapitalize="none" spellcheck="false" data-tp="rkName" placeholder="Username" required>
+        <input id="rk-app" maxlength="16" list="rk-apps" data-tp="rkApp" placeholder="Aplikasi" required>
+        <datalist id="rk-apps"><option value="TikTok"></option><option value="Instagram"></option><option value="Facebook"></option><option value="Threads"></option><option value="YouTube"></option><option value="WhatsApp"></option></datalist>
+        <button class="pill rk-join" id="rk-join" type="submit"><span data-t="rkJoin">Masuk ranking</span></button>
+      </form>
+      <p class="rk-lock" id="rk-lock" data-t="rkLock">Username dan aplikasi dikunci selepas masuk. Cuma nama boleh ditukar.</p>
+      <div class="rk-me" id="rk-me" hidden>
+        <span class="rk-me-txt"><b id="rk-me-name"></b><span class="rk-app" id="rk-me-sub"></span><span class="rk-place" id="rk-me-place"></span></span>
+        <button class="rk-edit" id="rk-rename-btn" type="button" data-t="rkRename">Tukar nama</button>
+      </div>
+      <form class="rk-rename" id="rk-rename" hidden>
+        <input id="rk-newname" maxlength="20" autocomplete="nickname" data-tp="rkDname" placeholder="Nama" required>
+        <button class="pill rk-join" type="submit"><span data-t="rkSave">Simpan</span></button>
+        <button class="rk-edit" id="rk-rename-cancel" type="button" data-t="rkCancel">Batal</button>
+      </form>
+      <ol class="rk-list" id="rk-list" aria-live="polite"></ol>
+      <p class="rk-note" id="rk-note" data-t="rkLoading">Memuatkan ranking…</p>
+    </div>
+  </section>
+
+  <section class="group" data-page="pautan" aria-labelledby="yt-h">
     <h2 id="yt-h">YouTube</h2>
     <a class="link" data-lang="bm" style="--d:150ms" href="https://www.youtube.com/@ApaJadiClips" target="_blank" rel="noopener">
       <span class="ico yt"><svg viewBox="0 0 24 24"><path fill="#fff" d="M9.5 7.6v8.8l7-4.4z"/></svg></span>
@@ -262,7 +420,7 @@ footer b{font-family:var(--display);color:var(--ink)}
     </a>
   </section>
 
-  <section class="group" aria-labelledby="so-h">
+  <section class="group" data-page="pautan" aria-labelledby="so-h">
     <h2 id="so-h" data-t="social">Media sosial</h2>
     <div class="socials">
       <a class="link" style="--d:390ms" href="https://www.facebook.com/apajadiclips" target="_blank" rel="noopener">
@@ -284,7 +442,15 @@ footer b{font-family:var(--display);color:var(--ink)}
     </div>
   </section>
 
-  <footer>© 2026 <b>ApaJadiClips</b> · <span data-t="footer">Tekan logo, dia akan buat flip.</span></footer>
+  <div class="share" data-page="pautan">
+    <button class="pill" id="copy" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></svg>
+      <span id="copy-label" data-t="copy">Salin link</span>
+    </button>
+    <span class="url" id="site-url">apajadiclips.github.io</span>
+  </div>
+
+  <footer>© 2026 <b>ApaJadiClips</b> · <span data-page="game" data-t="footer">Tekan logo untuk pijak dan naik ranking.</span><span data-page="pautan" data-t="footerLinks">Tekan Game untuk main pijak logo dan masuk ranking.</span></footer>
 </div>
 
 <script>
@@ -412,6 +578,7 @@ footer b{font-family:var(--display);color:var(--ink)}
     const halfLead = (fs - (asc + desc)) / 2;
     const sr = stage.getBoundingClientRect();
     W = el.offsetWidth; H = el.offsetHeight;
+    SW = shadow.offsetWidth; SH = shadow.offsetHeight;
     const raw = chars.map(s => {
       const r = s.getBoundingClientRect();
       const ink = ctx.measureText(s.textContent).actualBoundingBoxAscent ?? fs * .7;
@@ -424,9 +591,22 @@ footer b{font-family:var(--display);color:var(--ink)}
     }));
   }
 
+  // ---- shadow under the logo: small when it is high, full when it lands ----
+  const shadow = document.createElement("div"); shadow.className = "shadow"; stage.insertBefore(shadow, el);
+  let SW = 0, SH = 0;
+  function ground(x) {
+    if (!spots.length) return 0;
+    let best = spots[0];
+    for (const s of spots) if (Math.abs(s.x - x) < Math.abs(best.x - x)) best = s;
+    return best.y;
+  }
   const render = () => {
     el.style.transform = `translate(${m.x - W / 2}px, ${m.y - H}px)`;
     m.body.style.transform = `rotate(${m.rot}deg) scale(${m.sx}, ${m.sy})`;
+    const gy = ground(m.x), up = Math.max(0, gy - m.y);
+    const k = Math.max(.2, Math.min(1, 1 - up / (H * 1.8)));
+    shadow.style.transform = `translate(${m.x - SW / 2}px, ${gy - SH / 2}px) scale(${k * m.sx}, ${k})`;
+    shadow.style.opacity = el.style.opacity === "0" ? 0 : (k * .95).toFixed(3);
   };
   const look = d => { m.eye.style.transform = `translateX(${d * 70}px)`; };
   // tweens and waits abort (reject with STOP) the moment motion is switched off
@@ -561,7 +741,17 @@ footer b{font-family:var(--display);color:var(--ink)}
   // ---- 30 seconds on the page: the logo charges up and explodes ----
   const fx = document.getElementById("fx"), fctx = fx.getContext("2d");
   const boomtxt = document.getElementById("boomtxt");
-  const HEX = ["#111111", "#0B929C", "#4F1E6E"];
+  const hexes = () => { const cs = getComputedStyle(document.documentElement); return ["--c-black", "--c-teal", "--c-purple"].map(v => cs.getPropertyValue(v).trim()); };
+  function confetti(cx, cy) {
+    sizeFx();
+    const cols = [...hexes(), "#FFB020", "#FF4F7A"];
+    for (let i = 0; i < 170; i++) {
+      const a = -Math.PI / 2 + (Math.random() - .5) * 2.2, sp = 5 + Math.random() * 10;
+      parts.push({ x: cx, y: cy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, r: Math.random() * 6, vr: (Math.random() - .5) * .5,
+        s: 5 + Math.random() * 7, kind: 3, c: cols[i % cols.length], life: 1, decay: .006 + Math.random() * .006, g: .16, sway: Math.random() * 6 });
+    }
+    if (!fxRun) { fxRun = true; requestAnimationFrame(tick); }
+  }
   let parts = [], rings = [], fxRun = false;
   function sizeFx() {
     const d = Math.min(2, window.devicePixelRatio || 1);
@@ -573,9 +763,9 @@ footer b{font-family:var(--display);color:var(--ink)}
     for (let i = 0; i < 120; i++) {
       const a = Math.random() * Math.PI * 2, sp = 3 + Math.random() * 10;
       parts.push({ x: cx, y: cy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 3.5, r: Math.random() * 6, vr: (Math.random() - .5) * .45,
-        s: 5 + Math.random() * 9, kind: i % 3, c: HEX[(i * 7) % 3], life: 1, decay: .008 + Math.random() * .008 });
+        s: 5 + Math.random() * 9, kind: i % 3, c: hexes()[(i * 7) % 3], life: 1, decay: .008 + Math.random() * .008 });
     }
-    rings.push({ x: cx, y: cy, r: 8, a: 1, c: HEX[1] }, { x: cx, y: cy, r: 2, a: 1, c: HEX[2], slow: true });
+    const hx = hexes(); rings.push({ x: cx, y: cy, r: 8, a: 1, c: hx[1] }, { x: cx, y: cy, r: 2, a: 1, c: hx[2], slow: true });
     if (!fxRun) { fxRun = true; requestAnimationFrame(tick); }
   }
   function tick() {
@@ -587,11 +777,12 @@ footer b{font-family:var(--display);color:var(--ink)}
     });
     rings = rings.filter(g => g.a > 0);
     parts.forEach(p => {
-      p.vy += .28; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life -= p.decay;
+      p.vy += p.g ?? .28; p.vx *= p.g ? .97 : .985; p.x += p.vx + (p.sway ? Math.sin((p.y + p.sway * 40) * .05) * .8 : 0); p.y += p.vy; p.r += p.vr; p.life -= p.decay;
       fctx.globalAlpha = Math.max(0, Math.min(1, p.life * 1.6));
       fctx.save(); fctx.translate(p.x, p.y); fctx.rotate(p.r);
       fctx.fillStyle = p.c; fctx.strokeStyle = p.c;
-      if (p.kind === 0) fctx.fillRect(-p.s * .28, -p.s * .7, p.s * .56, p.s * 1.4);          // a ray
+      if (p.kind === 3) fctx.fillRect(-p.s * .5, -p.s * .3 * Math.abs(Math.cos(p.r * 2)) - 1, p.s, p.s * .6 * Math.abs(Math.cos(p.r * 2)) + 2); // confetti
+      else if (p.kind === 0) fctx.fillRect(-p.s * .28, -p.s * .7, p.s * .56, p.s * 1.4);          // a ray
       else if (p.kind === 1) { fctx.beginPath(); fctx.arc(0, 0, p.s * .45, 0, Math.PI * 2); fctx.fill(); }
       else { fctx.lineWidth = p.s * .35; fctx.lineJoin = "round"; fctx.beginPath();       // a little chevron
         fctx.moveTo(-p.s * .6, p.s * .3); fctx.lineTo(0, -p.s * .3); fctx.lineTo(p.s * .6, p.s * .3); fctx.stroke(); }
@@ -651,6 +842,28 @@ footer b{font-family:var(--display);color:var(--ink)}
     if (seen >= 30000) { clearInterval(boomTimer); boomPending = true; if (m.busy) interrupt = true; }
   }, 250);
 
+  // ---- secret: tap the logo 5 times quickly ----
+  let secretPending = false, taps = [];
+  async function secret() {
+    chars.forEach(c => { c.style.color = ""; c.classList.remove("stomp", "nudge"); });
+    m.rot = 0; m.sx = m.sy = 1; m.body.style.transformOrigin = "";
+    if (el.style.opacity === "0") await dropIn(MID); else await hop(MID, { h: H * .6 });
+    boomtxt.textContent = T[langBtn.dataset.code || "bm"].secret; boomtxt.classList.add("small");
+    restart(boomtxt, "go");
+    const r = el.getBoundingClientRect(); confetti(r.left + r.width / 2, r.top + r.height * .3);
+    for (let i = 0; i < N; i++) { // a colour wave runs along the name
+      setTimeout(() => { if (!motionOn) return; chars[i].style.color = COLORS[i % 3]; restart(chars[i], "stomp"); sfx.stomp(i, .45, i % 3); }, i * 70);
+    }
+    await hop(MID, { spin: 360, h: H * 1.15, dur: 640, prep: 120, settle: 300 });
+    await hop(MID, { spin: -360, h: H * 1.15, dur: 640, prep: 120, settle: 300 });
+    const r2 = el.getBoundingClientRect(); confetti(r2.left + r2.width / 2, r2.top);
+    await hop(MID, { spin: 720, h: H * 1.5, dur: 860, prep: 180, hard: 1.4 });
+    await wait(500);
+    chars.forEach(c => { c.style.color = ""; });
+    boomtxt.textContent = "BOOM!"; boomtxt.classList.remove("small");
+    await leave(1);
+  }
+
   const ROUTINES = [walk, quake, flips];
 
   function rest() {
@@ -665,6 +878,15 @@ footer b{font-family:var(--display);color:var(--ink)}
     let k = 0;
     for (;;) {
       while (!motionOn || document.hidden) await sleep(250);
+      if (secretPending) {
+        interrupt = false; secretPending = false; m.busy = true;
+        try { await secret(); }
+        catch (e) { if (e !== STOP) console.error(e); }
+        finally { m.busy = false; boomtxt.textContent = "BOOM!"; boomtxt.classList.remove("small"); }
+        if (!motionOn) { rest(); continue; }
+        await sleep(500);
+        continue;
+      }
       if (boomPending) {
         interrupt = false; boomPending = false; m.busy = true;
         try { await boom(); }
@@ -688,12 +910,25 @@ footer b{font-family:var(--display);color:var(--ink)}
     motionOn = on;
     motionBtn.setAttribute("aria-pressed", on);
     stage.classList.toggle("still", !on);
+    document.documentElement.classList.toggle("calm", !on);
     try { localStorage.setItem("ajc-motion", on ? "1" : "0"); } catch (e) {}
     if (!on) rest(); else el.style.opacity = 0;
   }
   motionBtn.addEventListener("click", () => setMotion(!motionOn));
 
-  const tapLogo = () => { if (motionOn) flipNext = true; };
+  let secretDone = false, tapTimes = [];
+  const tapLogo = () => {
+    const now = performance.now();
+    // every tap is a stomp (at most 8 a second count, so auto-clickers gain little)
+    tapTimes = tapTimes.filter(t => now - t < 1000);
+    if (tapTimes.length < 8) { tapTimes.push(now); addStep(); }
+    m.sy = .78; m.sx = 1.18; render(); setTimeout(() => { m.sy = m.sx = 1; render(); }, 90);
+    restart(m.rays, "pop"); sfx.stomp(m.idx, .7, m.color);
+    if (!motionOn) return;
+    flipNext = true;
+    taps = taps.filter(t => now - t < 2500); taps.push(now);
+    if (!secretDone && taps.length >= 5) { taps = []; secretDone = true; secretPending = true; if (m.busy) interrupt = true; }
+  };
   el.addEventListener("click", tapLogo);
   el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tapLogo(); } });
 
@@ -706,14 +941,20 @@ footer b{font-family:var(--display);color:var(--ink)}
   // ---- language: BM / EN / ID ----
   const T = {
     bm: { html: "ms", code: "BM", motionOn: "Gerak: Buka", motionOff: "Gerak: Tutup", soundOn: "Bunyi: Buka", soundOff: "Bunyi: Tutup",
-          social: "Media sosial", footer: "Tekan logo, dia akan buat flip.", logo: "Tekan logo supaya dia buat flip",
-          lang: "Tukar bahasa (sekarang Bahasa Melayu)", forme: "Saluran dalam bahasa anda" },
+          social: "Media sosial", tabLinks: "Pautan", tabGame: "Game", footerLinks: "Tekan Game untuk main pijak logo dan masuk ranking.", footer: "Tekan logo untuk pijak dan naik ranking.", logo: "Tekan logo supaya dia buat flip",
+          lang: "Tukar bahasa (sekarang Bahasa Melayu)", forme: "Saluran dalam bahasa anda",
+          steps: "pijakan anda", rkTitle: "Ranking pijakan", rkSub: "Tekan logo untuk pijak. 10 teratas masuk carta.", rkDname: "Nama", rkName: "Username", rkAppL: "Aplikasi", rkStepL: "Pijakan", rkLock: "Username dan aplikasi dikunci selepas masuk. Cuma nama boleh ditukar.", rkRename: "Tukar nama", rkCancel: "Batal", rkApp: "Aplikasi", rkJoin: "Masuk ranking", rkSave: "Simpan", rkYou: "anda", rkUnit: "pijakan", rkEmpty: "Belum ada sesiapa dalam ranking. Jadi yang pertama!", rkLoading: "Memuatkan ranking…", rkSlow: "Ranking belum dapat dimuatkan. Cuba sebentar lagi.", rkOff: "Ranking akan dibuka tak lama lagi. Teruskan pijak!", rkSignin: "Log masuk ke Claude untuk masuk ranking.", rkNoWrite: "Anda boleh lihat ranking, tapi tak boleh masuk dari akaun ini.", rkRank: "Kedudukan anda", rkOut: "Belum masuk 10 teratas. Pijak lagi!",
+          copy: "Salin link", copied: "Link disalin ✓", copyFail: "Tekan lama alamat untuk salin", secret: "Jumpa rahsia!", night: "Mod malam" },
     en: { html: "en", code: "EN", motionOn: "Motion: On", motionOff: "Motion: Off", soundOn: "Sound: On", soundOff: "Sound: Off",
-          social: "Social media", footer: "Tap the logo to make it flip.", logo: "Tap the logo to make it flip",
-          lang: "Change language (now English)", forme: "Channel in your language" },
+          social: "Social media", tabLinks: "Links", tabGame: "Game", footerLinks: "Tap Game to play the logo stomp and join the ranking.", footer: "Tap the logo to stomp and climb the ranking.", logo: "Tap the logo to make it flip",
+          lang: "Change language (now English)", forme: "Channel in your language",
+          steps: "your stomps", rkTitle: "Stomp ranking", rkSub: "Tap the logo to stomp. The top 10 make the chart.", rkDname: "Name", rkName: "Username", rkAppL: "App", rkStepL: "Stomps", rkLock: "Username and app are locked once you join. Only your name can change.", rkRename: "Change name", rkCancel: "Cancel", rkApp: "App", rkJoin: "Join the ranking", rkSave: "Save", rkYou: "you", rkUnit: "stomps", rkEmpty: "Nobody on the ranking yet. Be the first!", rkLoading: "Loading the ranking…", rkSlow: "The ranking can't be loaded yet. Try again shortly.", rkOff: "The ranking opens soon. Keep stomping!", rkSignin: "Sign in to Claude to join the ranking.", rkNoWrite: "You can see the ranking, but this account can't join it.", rkRank: "Your place", rkOut: "Not in the top 10 yet. Keep stomping!",
+          copy: "Copy link", copied: "Link copied ✓", copyFail: "Long-press the address to copy", secret: "Secret found!", night: "Night mode" },
     id: { html: "id", code: "ID", motionOn: "Gerak: Nyala", motionOff: "Gerak: Mati", soundOn: "Suara: Nyala", soundOff: "Suara: Mati",
-          social: "Media sosial", footer: "Ketuk logonya, dia bakal salto.", logo: "Ketuk logo supaya dia salto",
-          lang: "Ganti bahasa (sekarang Bahasa Indonesia)", forme: "Kanal dalam bahasamu" },
+          social: "Media sosial", tabLinks: "Tautan", tabGame: "Game", footerLinks: "Ketuk Game buat main injak logo dan ikut peringkat.", footer: "Ketuk logo buat injak dan naik peringkat.", logo: "Ketuk logo supaya dia salto",
+          lang: "Ganti bahasa (sekarang Bahasa Indonesia)", forme: "Kanal dalam bahasamu",
+          steps: "injakan kamu", rkTitle: "Peringkat injakan", rkSub: "Ketuk logo buat injak. 10 teratas masuk tabel.", rkDname: "Nama", rkName: "Username", rkAppL: "Aplikasi", rkStepL: "Injakan", rkLock: "Username dan aplikasi dikunci setelah masuk. Hanya nama yang bisa diubah.", rkRename: "Ubah nama", rkCancel: "Batal", rkApp: "Aplikasi", rkJoin: "Ikut peringkat", rkSave: "Simpan", rkYou: "kamu", rkUnit: "injakan", rkEmpty: "Belum ada yang masuk peringkat. Jadilah yang pertama!", rkLoading: "Memuat peringkat…", rkSlow: "Peringkat belum bisa dimuat. Coba lagi sebentar.", rkOff: "Peringkat segera dibuka. Terus injak!", rkSignin: "Masuk ke Claude untuk ikut peringkat.", rkNoWrite: "Kamu bisa lihat peringkat, tapi akun ini tidak bisa ikut.", rkRank: "Posisimu", rkOut: "Belum masuk 10 besar. Injak lagi!",
+          copy: "Salin tautan", copied: "Tautan disalin ✓", copyFail: "Tekan lama alamatnya untuk menyalin", secret: "Rahasia ketemu!", night: "Mode malam" },
   };
   const ORDER = ["bm", "en", "id"];
   const langBtn = document.getElementById("lang");
@@ -723,6 +964,8 @@ footer b{font-family:var(--display);color:var(--ink)}
     const t = T[code] || T.bm;
     document.documentElement.lang = t.html;
     document.querySelectorAll("[data-t]").forEach(n => { n.textContent = t[n.dataset.t]; });
+    document.querySelectorAll("[data-tp]").forEach(n => { n.placeholder = t[n.dataset.tp]; n.setAttribute("aria-label", t[n.dataset.tp]); });
+    if (window.__ajcRank) window.__ajcRank.relabel();
     document.getElementById("lang-code").textContent = t.code;
     langBtn.setAttribute("aria-label", t.lang);
     el.setAttribute("aria-label", t.logo);
@@ -732,6 +975,7 @@ footer b{font-family:var(--display);color:var(--ink)}
     if (mine) {
       ytGroup.insertBefore(mine, ytGroup.querySelector("a[data-lang]"));
     }
+    document.getElementById("night").setAttribute("aria-label", t.night);
     langBtn.dataset.code = code;
     if (save) { try { localStorage.setItem("ajc-lang", code); } catch (e) {} }
   }
@@ -747,8 +991,179 @@ footer b{font-family:var(--display);color:var(--ink)}
     setLang(ORDER[(ORDER.indexOf(langBtn.dataset.code) + 1) % ORDER.length], true);
     restart(langBtn, "spin");
   });
+  // ---- stomp counter (this visitor's) ----
+  const countEl = document.getElementById("count");
+  let steps = 0;
+  try { steps = parseInt(localStorage.getItem("ajc-taps") || "0", 10) || 0; } catch (e) {}
+  const fmt = n => n.toLocaleString(document.documentElement.lang || "ms");
+  countEl.textContent = fmt(steps);
+  function addStep() {
+    if (document.documentElement.dataset.route !== "game") return;
+    steps++; countEl.textContent = fmt(steps); restart(countEl, "bump");
+    try { localStorage.setItem("ajc-taps", String(steps)); } catch (e) {}
+    rank.changed();
+  }
+
+  // ---- ranking: name + app the visitor types, and their stomps; top 10 chart ----
+  const APPC = { tiktok: "#FE2C55", instagram: "#D9257E", facebook: "#1877F2", threads: "var(--ink)", youtube: "#FF0033", whatsapp: "#25D366" };
+  const BARC = ["var(--c-teal)", "var(--c-purple)", "var(--c-black)"];
+  const rank = (() => {
+    const $ = id => document.getElementById(id);
+    const form = $("rk-form"), meBox = $("rk-me"), list = $("rk-list"), note = $("rk-note"), renameForm = $("rk-rename");
+    let db = null, uid = null, me = null, rows = [], state = "loading", saveT = 0, saving = false, again = false, blocked = false;
+    const t = () => T[langBtn.dataset.code || "bm"];
+    const clean = (v, n) => String(v ?? "").replace(/[\u0000-\u001f]/g, "").trim().slice(0, n);
+    const cleanUser = v => clean(v, 25).replace(/^@+/, "").replace(/\s+/g, " ");
+    const APPN = { tiktok: "TikTok", instagram: "Instagram", facebook: "Facebook", threads: "Threads", youtube: "YouTube", whatsapp: "WhatsApp", fb: "Facebook", ig: "Instagram", yt: "YouTube", wa: "WhatsApp" };
+    const cleanApp = v => { const a = clean(v, 16); return APPN[a.toLowerCase().replace(/[^a-z]/g, "")] || a; };
+    const appColor = a => APPC[a.toLowerCase().replace(/[^a-z]/g, "")] || "var(--muted)";
+    function say(key) { note.textContent = key ? t()[key] : ""; }
+    function sub(user, app) {
+      const a = document.createElement("span"); a.className = "rk-app"; a.style.setProperty("--appc", appColor(app));
+      a.textContent = (user ? "@" + user + " · " : "") + app;
+      return a;
+    }
+    function render() {
+      const tt = t();
+      list.textContent = "";
+      const top = rows.slice(0, 10), max = Math.max(1, ...top.map(r => r.steps));
+      top.forEach((r, i) => {
+        const li = document.createElement("li"); li.className = "rk-row" + (r.id === uid ? " me" : "");
+        li.style.setProperty("--w", Math.max(6, r.steps / max * 100) + "%");
+        li.style.setProperty("--barc", BARC[i % 3]);
+        const bar = document.createElement("span"); bar.className = "rk-bar";
+        const pos = document.createElement("span"); pos.className = "rk-pos"; pos.textContent = i + 1;
+        const who = document.createElement("span"); who.className = "rk-who";
+        const line = (label, value, cls) => {
+          const d = document.createElement("span"); d.className = "rk-line" + (cls ? " " + cls : "");
+          const l = document.createElement("span"); l.className = "rk-lbl"; l.textContent = label;
+          const v = document.createElement("span"); v.className = "rk-val"; v.textContent = value;
+          d.append(l, v); return d;
+        };
+        const nm = line(tt.rkDname, r.name + (r.id === uid ? " (" + tt.rkYou + ")" : ""), "rk-n");
+        const ap = line(tt.rkAppL, r.app, "rk-ap"); ap.style.setProperty("--appc", appColor(r.app));
+        who.append(nm, line(tt.rkName, r.user || "–"), ap);
+        const sc = document.createElement("span"); sc.className = "rk-s";
+        const u = document.createElement("small"); u.textContent = tt.rkStepL;
+        const num = document.createElement("span"); num.textContent = fmt(r.steps);
+        sc.append(u, num);
+        li.append(bar, pos, who, sc); list.appendChild(li);
+      });
+      if (state === "ready") say(top.length ? "" : "rkEmpty");
+      // the visitor's own line
+      if (me) {
+        $("rk-me-name").textContent = me.name;
+        const old = $("rk-me-sub"); const s2 = sub(me.user, me.app); s2.id = "rk-me-sub"; old.replaceWith(s2);
+        const place = rows.findIndex(r => r.id === uid);
+        $("rk-me-place").textContent = place >= 0 && place < 10 ? tt.rkRank + ": #" + (place + 1) : tt.rkOut;
+      }
+      meBox.hidden = !me || !renameForm.hidden;
+      form.hidden = !!me || !db || !uid || blocked;
+      $("rk-lock").hidden = form.hidden;
+    }
+    async function save() {
+      if (!db || !uid || !me) return;
+      if (saving) { again = true; return; }
+      saving = true;
+      try {
+        do { again = false; await db.collection("ranking").doc(uid).set({ name: me.name, user: me.user, app: me.app, steps, at: Date.now() }); } while (again);
+      } catch (e) {
+        blocked = true; me = null; say("rkNoWrite"); render();
+      } finally { saving = false; }
+    }
+    function changed() { if (!me) return; clearTimeout(saveT); saveT = setTimeout(save, 2000); }
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const name = clean($("rk-dname").value, 20), user = cleanUser($("rk-user").value), app = cleanApp($("rk-app").value);
+      if (!name || !user || !app) return;
+      me = { name, user, app }; render(); save();
+    });
+    // only the display name can change; username and app stay as first entered
+    $("rk-rename-btn").addEventListener("click", () => {
+      $("rk-newname").value = me ? me.name : "";
+      renameForm.hidden = false; render(); $("rk-newname").focus();
+    });
+    $("rk-rename-cancel").addEventListener("click", () => { renameForm.hidden = true; render(); });
+    renameForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const name = clean($("rk-newname").value, 20);
+      if (!name || !me) return;
+      me = { ...me, name }; renameForm.hidden = true; render(); save();
+    });
+    async function start() {
+      const c = window.claude && window.claude.use ? window.claude : null;
+      if (!c) { state = "off"; say("rkOff"); return render(); }
+      const [d, user] = await Promise.all([c.use("db"), c.use("user")]);
+      if (!d) { state = "off"; say("rkOff"); return render(); }
+      db = d; uid = user ? await user.id() : null;
+      const slow = setTimeout(() => { if (state === "loading") say("rkSlow"); }, 10000);
+      db.collection("ranking").orderBy("steps", "desc").limit(50).onSnapshot(snap => {
+        rows = snap.docs.map(x => { const v = x.data() || {}; return { id: x.id, name: clean(v.name, 20) || "?", user: cleanUser(v.user), app: cleanApp(v.app) || "?",
+          steps: Math.max(0, Math.min(1e7, Math.floor(Number(v.steps) || 0))) }; });
+        const mine = rows.find(r => r.id === uid);
+        if (mine) {
+          // username and app are whatever was stored first; this page never changes them
+          if (!me) me = { name: mine.name, user: mine.user, app: mine.app };
+          else { me.user = mine.user || me.user; me.app = mine.app; }
+          if (mine.steps > steps) { steps = mine.steps; countEl.textContent = fmt(steps); }
+        }
+        if (!snap.metadata.fromCache) { clearTimeout(slow); state = "ready"; }
+        render();
+      }, () => { clearTimeout(slow); state = "error"; say("rkSlow"); render(); });
+      if (!uid) say("rkSignin");
+      render();
+    }
+    start();
+    const api = { changed, relabel: () => { if (state === "off") say("rkOff"); else if (state === "loading") say("rkLoading"); render(); } };
+    window.__ajcRank = api;
+    return api;
+  })();
+
+  // ---- copy link ----
+  const SITE = "https://apajadiclips.github.io";
+  const copyBtn = document.getElementById("copy"), copyLabel = document.getElementById("copy-label");
+  let copyT = 0;
+  copyBtn.addEventListener("click", () => {
+    const t = T[langBtn.dataset.code || "bm"];
+    const say = (msg, ok) => {
+      copyLabel.textContent = msg; copyBtn.classList.toggle("done", ok);
+      clearTimeout(copyT); copyT = setTimeout(() => { copyLabel.textContent = t.copy; copyBtn.classList.remove("done"); }, 2200);
+    };
+    const fallback = () => {
+      const u = document.getElementById("site-url"), sel = getSelection(), rg = document.createRange();
+      rg.selectNodeContents(u); sel.removeAllRanges(); sel.addRange(rg);
+      say(t.copyFail, false);
+    };
+    try { navigator.clipboard.writeText(SITE).then(() => say(t.copied, true), fallback); } catch (e) { fallback(); }
+  });
+
+  // ---- night mode: automatic at night or on a dark phone, or by the moon button ----
+  const nightBtn = document.getElementById("night");
+  function setNight(on, save) {
+    document.documentElement.dataset.night = on ? "1" : "0";
+    nightBtn.setAttribute("aria-pressed", on);
+    if (save) { try { localStorage.setItem("ajc-night", on ? "1" : "0"); } catch (e) {} }
+  }
+  let night = null;
+  try { night = localStorage.getItem("ajc-night"); } catch (e) {}
+  if (night === null) {
+    const hr = new Date().getHours();
+    setNight(matchMedia("(prefers-color-scheme: dark)").matches || hr >= 19 || hr < 7, false);
+  } else setNight(night === "1", false);
+  nightBtn.addEventListener("click", () => { setNight(document.documentElement.dataset.night !== "1", true); restart(nightBtn, "spin"); });
+
   // let hover/press work once the entrance animation is done
   document.querySelectorAll(".link").forEach(a => a.addEventListener("animationend", e => { if (e.animationName === "rise") a.style.animation = "none"; }));
+
+  // ---- two pages on one link: #pautan (links) and #game ----
+  function route() {
+    const r = location.hash === "#game" ? "game" : "pautan";
+    document.documentElement.dataset.route = r;
+    document.querySelectorAll(".tab").forEach(tb => tb.toggleAttribute("aria-current", false) || (tb.dataset.route === r && tb.setAttribute("aria-current", "page")));
+    requestAnimationFrame(() => { measure(); if (!m.busy) { m.x = spots[m.idx].x; m.y = spots[m.idx].y; render(); } });
+  }
+  addEventListener("hashchange", route);
+  route();
 
   measure(); rest();
   const fontsReady = document.fonts ? Promise.race([document.fonts.ready, sleep(1500)]) : Promise.resolve();
@@ -759,4 +1174,5 @@ footer b{font-family:var(--display);color:var(--ink)}
   }));
 })();
 </script>
-</body></html>
+</body>
+</html>
